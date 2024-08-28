@@ -1,99 +1,120 @@
-import 'package:disaster_management/firebase_options.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'dart:io';
 
-Future<void> main() async {
-  final WidgetsBinding widgetsBinding =
-      WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(MyApp());
-}
+import 'package:dotenv/dotenv.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+void main() async {
+  await dotenv.load(fileName: ".env");
+   runApp(MyApp());}
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Live Location',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: LocationScreen(),
+      title: 'Map Directions',
+      home: MapScreen(),
     );
   }
 }
 
-class LocationScreen extends StatefulWidget {
+class MapScreen extends StatefulWidget {
   @override
-  _LocationScreenState createState() => _LocationScreenState();
+  _MapScreenState createState() => _MapScreenState();
 }
 
-class _LocationScreenState extends State<LocationScreen> {
-  Position? _currentPosition;
-  String _locationMessage = "Fetching location...";
+class _MapScreenState extends State<MapScreen> {
+  late GoogleMapController _mapController;
+  final LatLng _startLocation = LatLng(11.430790, 75.699440); // Kerala
+  final LatLng _endLocation = LatLng(11.450060, 75.770447); // Delhi
+  Set<Polyline> _polylines = {};
+  List<LatLng> _polylineCoordinates = [];
+ 
 
   @override
-  void initState() {
+  void initState() {  
     super.initState();
-    _checkPermissions();
+    _getDirections();
   }
 
-  Future<void> _checkPermissions() async {
-    bool serviceEnabled;
-    LocationPermission permission;
+  void _getDirections() async {
+    String url =
+        'https://maps.googleapis.com/maps/api/directions/json?origin=${_startLocation.latitude},${_startLocation.longitude}&destination=${_endLocation.latitude},${_endLocation.longitude}&key=APIKEY';
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      setState(() {
-        _locationMessage = 'Location services are disabled.';
-      });
-      return;
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse &&
-          permission != LocationPermission.always) {
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      print(response.body); // Debug: Print the response
+      final decodedData = json.decode(response.body);
+      final routes = decodedData['routes'] as List;
+      if (routes.isNotEmpty) {
+        final points = routes[0]['overview_polyline']['points'];
+        _polylineCoordinates = _decodePolyline(points);
         setState(() {
-          _locationMessage = 'Location permissions are denied.';
+          _polylines.add(
+            Polyline(
+              polylineId: PolylineId('route'),
+              points: _polylineCoordinates,
+              color: Colors.blue,
+              width: 5,
+            ),
+          );
         });
-        return;
       }
+    } else {
+      print("Failed to get directions: ${response.statusCode}");
     }
-
-    _listenToLocationChanges();
   }
 
-  void _listenToLocationChanges() {
-    Geolocator.getPositionStream(
-      locationSettings: LocationSettings(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 1, // Set to 1 meter for frequent updates
-      ),
-    ).listen((Position position) {
-      print('Position updated: ${position.latitude}, ${position.longitude}');
-      setState(() {
-        _currentPosition = position;
-        _locationMessage =
-            'Latitude: ${position.latitude}, Longitude: ${position.longitude}';
-      });
-    });
+  List<LatLng> _decodePolyline(String encoded) {
+    List<LatLng> points = [];
+    int index = 0, len = encoded.length;
+    int lat = 0, lng = 0;
+
+    while (index < len) {
+      int b, shift = 0, result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlat = (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
+      lat += dlat;
+
+      shift = 0;
+      result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlng = (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
+      lng += dlng;
+
+      points.add(LatLng(lat / 1E5, lng / 1E5));
+    }
+    return points;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Live Location'),
-      ),
-      body: Center(
-        child: Text(
-          _locationMessage,
-          style: TextStyle(fontSize: 20),
+      appBar: AppBar(title: Text('Map Directions')),
+      body: GoogleMap(
+        initialCameraPosition: CameraPosition(
+          target: _startLocation,
+          zoom: 5.0, // Adjust this to focus on the route
         ),
+        onMapCreated: (GoogleMapController controller) {
+          _mapController = controller;
+        },
+        polylines: _polylines,
+        markers: {
+          Marker(markerId: MarkerId('start'), position: _startLocation),
+          Marker(markerId: MarkerId('end'), position: _endLocation),
+        },
       ),
     );
   }
