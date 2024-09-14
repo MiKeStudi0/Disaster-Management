@@ -3,13 +3,11 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  cloud_firestore
   connectivity_plus
-  file_selector_windows
-  firebase_auth
-  firebase_core
-  firebase_storage
+  dynamic_color
+  flutter_timezone
   geolocator_windows
+  isar_flutter_libs
   url_launcher_windows
 )
 

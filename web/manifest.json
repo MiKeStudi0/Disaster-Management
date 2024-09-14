@@ -1,6 +1,6 @@
 {
-    "name": "disaster_management",
-    "short_name": "disaster_management",
+    "name": "rain",
+    "short_name": "rain",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
