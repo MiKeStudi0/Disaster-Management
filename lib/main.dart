@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:disaster_management/firebase_options.dart';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -87,6 +89,9 @@ void callbackDispatcher() {
 void main() async {
   final String timeZoneName;
   WidgetsFlutterBinding.ensureInitialized();
+  await await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   Connectivity()
       .onConnectivityChanged
       .listen((List<ConnectivityResult> result) {

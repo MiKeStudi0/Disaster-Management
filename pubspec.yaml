@@ -57,6 +57,9 @@ dependencies:
   isar_flutter_libs:
     version: ^3.1.8
     hosted: https://pub.isar-community.dev/
+  firebase_core: ^3.4.1
+  firebase_storage: ^12.3.0
+  firebase_auth: ^5.2.1
 
 # Uncomment this for publishing FLOSS variant
 # dependency_overrides:

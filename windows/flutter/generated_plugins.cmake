@@ -5,6 +5,9 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   connectivity_plus
   dynamic_color
+  firebase_auth
+  firebase_core
+  firebase_storage
   flutter_timezone
   geolocator_windows
   isar_flutter_libs
