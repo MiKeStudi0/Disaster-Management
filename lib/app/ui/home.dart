@@ -1,3 +1,4 @@
+import 'package:disaster_management/disaster/screen/chatscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
@@ -35,6 +36,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     const PlaceList(),
     if (!settings.hideMap) const MapPage(),
     const SettingsPage(),
+    const Chatscreen(),
   ];
 
   @override
@@ -76,10 +78,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void changeTabIndex(int index) {
-    setState(() {
-      tabIndex = index;
-    });
-    tabController.animateTo(tabIndex);
+    if (index >= 0 && index < pages.length) {
+      setState(() {
+        tabIndex = index;
+      });
+      tabController.animateTo(tabIndex);
+    } else {
+      // Optionally handle the error, e.g., log or show a message
+    }
   }
 
   @override
@@ -224,6 +230,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   'settings_full'.tr,
                   style: textStyle,
                 ),
+              4 => Text('Chat with Bot', style: textStyle),
               int() => null,
             },
             actions: switch (tabIndex) {
@@ -280,6 +287,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 icon: const Icon(IconsaxPlusLinear.category),
                 selectedIcon: const Icon(IconsaxPlusBold.category),
                 label: 'settings_full'.tr,
+              ),
+              NavigationDestination(
+                icon: const Icon(IconsaxPlusLinear.direct_inbox),
+                selectedIcon: const Icon(IconsaxPlusBold.direct_inbox),
+                label: 'chatbot'.tr,
               ),
             ],
           ),
