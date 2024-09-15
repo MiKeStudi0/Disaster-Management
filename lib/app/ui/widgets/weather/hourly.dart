@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:rain/app/ui/widgets/weather/status/status_data.dart';
-import 'package:rain/app/ui/widgets/weather/status/status_weather.dart';
-import 'package:rain/main.dart';
+import 'package:disaster_management/app/ui/widgets/weather/status/status_data.dart';
+import 'package:disaster_management/app/ui/widgets/weather/status/status_weather.dart';
+import 'package:disaster_management/main.dart';
 
 class Hourly extends StatefulWidget {
   const Hourly({

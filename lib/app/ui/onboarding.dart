@@ -1,8 +1,8 @@
 import 'package:gap/gap.dart';
-import 'package:rain/app/data/db.dart';
-import 'package:rain/app/ui/geolocation.dart';
-import 'package:rain/app/ui/widgets/button.dart';
-import 'package:rain/main.dart';
+import 'package:disaster_management/app/data/db.dart';
+import 'package:disaster_management/app/ui/geolocation.dart';
+import 'package:disaster_management/app/ui/widgets/button.dart';
+import 'package:disaster_management/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rain/app/ui/widgets/weather/desc/desc.dart';
-import 'package:rain/app/ui/widgets/weather/desc/message.dart';
-import 'package:rain/app/ui/widgets/weather/status/status_data.dart';
+import 'package:disaster_management/app/ui/widgets/weather/desc/desc.dart';
+import 'package:disaster_management/app/ui/widgets/weather/desc/message.dart';
+import 'package:disaster_management/app/ui/widgets/weather/status/status_data.dart';
 
 class DescContainer extends StatefulWidget {
   const DescContainer({

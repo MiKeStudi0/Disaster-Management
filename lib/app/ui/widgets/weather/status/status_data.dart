@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:rain/main.dart';
+import 'package:disaster_management/main.dart';
 import 'package:timezone/timezone.dart';
 
 class StatusData {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
-import 'package:rain/app/controller/controller.dart';
-import 'package:rain/app/ui/places/widgets/place_card_list.dart';
-import 'package:rain/app/ui/widgets/text_form.dart';
+import 'package:disaster_management/app/controller/controller.dart';
+import 'package:disaster_management/app/ui/places/widgets/place_card_list.dart';
+import 'package:disaster_management/app/ui/widgets/text_form.dart';
 
 class PlaceList extends StatefulWidget {
   const PlaceList({super.key});

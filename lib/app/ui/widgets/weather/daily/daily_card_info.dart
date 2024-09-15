@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
-import 'package:rain/app/data/db.dart';
-import 'package:rain/app/ui/widgets/weather/desc/desc_container.dart';
-import 'package:rain/app/ui/widgets/weather/desc/message.dart';
-import 'package:rain/app/ui/widgets/weather/hourly.dart';
-import 'package:rain/app/ui/widgets/weather/now.dart';
-import 'package:rain/app/ui/widgets/weather/status/status_data.dart';
-import 'package:rain/app/ui/widgets/weather/status/status_weather.dart';
-import 'package:rain/app/ui/widgets/weather/sunset_sunrise.dart';
-import 'package:rain/main.dart';
+import 'package:disaster_management/app/data/db.dart';
+import 'package:disaster_management/app/ui/widgets/weather/desc/desc_container.dart';
+import 'package:disaster_management/app/ui/widgets/weather/desc/message.dart';
+import 'package:disaster_management/app/ui/widgets/weather/hourly.dart';
+import 'package:disaster_management/app/ui/widgets/weather/now.dart';
+import 'package:disaster_management/app/ui/widgets/weather/status/status_data.dart';
+import 'package:disaster_management/app/ui/widgets/weather/status/status_weather.dart';
+import 'package:disaster_management/app/ui/widgets/weather/sunset_sunrise.dart';
+import 'package:disaster_management/main.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class DailyCardInfo extends StatefulWidget {

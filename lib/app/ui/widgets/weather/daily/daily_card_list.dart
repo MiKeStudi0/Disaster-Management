@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
-import 'package:rain/app/data/db.dart';
-import 'package:rain/app/ui/widgets/weather/daily/daily_card_info.dart';
-import 'package:rain/app/ui/widgets/weather/daily/daily_card.dart';
+import 'package:disaster_management/app/data/db.dart';
+import 'package:disaster_management/app/ui/widgets/weather/daily/daily_card_info.dart';
+import 'package:disaster_management/app/ui/widgets/weather/daily/daily_card.dart';
 
 class DailyCardList extends StatefulWidget {
   const DailyCardList({

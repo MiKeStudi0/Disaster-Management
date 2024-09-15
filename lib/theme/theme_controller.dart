@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:rain/app/data/db.dart';
-import 'package:rain/main.dart';
+import 'package:disaster_management/app/data/db.dart';
+import 'package:disaster_management/main.dart';
 
 class ThemeController extends GetxController {
   ThemeMode get theme => settings.theme == 'system'

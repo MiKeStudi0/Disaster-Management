@@ -12,12 +12,12 @@ import 'package:intl/intl.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:rain/app/controller/controller.dart';
-import 'package:rain/app/data/db.dart';
-import 'package:rain/app/ui/settings/widgets/setting_card.dart';
-import 'package:rain/main.dart';
-import 'package:rain/theme/theme_controller.dart';
-import 'package:rain/app/utils/color_converter.dart';
+import 'package:disaster_management/app/controller/controller.dart';
+import 'package:disaster_management/app/data/db.dart';
+import 'package:disaster_management/app/ui/settings/widgets/setting_card.dart';
+import 'package:disaster_management/main.dart';
+import 'package:disaster_management/theme/theme_controller.dart';
+import 'package:disaster_management/app/utils/color_converter.dart';
 import 'package:restart_app/restart_app.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -649,7 +649,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     name: androidWidgetName,
                                     androidName: androidWidgetName,
                                     qualifiedAndroidName:
-                                        'com.yoshi.rain.OreoWidget',
+                                        'com.example.disaster_management.OreoWidget',
                                   );
                                 },
                               ),

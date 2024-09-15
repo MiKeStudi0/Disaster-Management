@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
-import 'package:rain/app/controller/controller.dart';
-import 'package:rain/app/data/db.dart';
-import 'package:rain/app/ui/widgets/weather/daily/daily_card_list.dart';
-import 'package:rain/app/ui/widgets/weather/daily/daily_container.dart';
-import 'package:rain/app/ui/widgets/weather/desc/desc_container.dart';
-import 'package:rain/app/ui/widgets/weather/hourly.dart';
-import 'package:rain/app/ui/widgets/weather/now.dart';
-import 'package:rain/app/ui/widgets/weather/sunset_sunrise.dart';
+import 'package:disaster_management/app/controller/controller.dart';
+import 'package:disaster_management/app/data/db.dart';
+import 'package:disaster_management/app/ui/widgets/weather/daily/daily_card_list.dart';
+import 'package:disaster_management/app/ui/widgets/weather/daily/daily_container.dart';
+import 'package:disaster_management/app/ui/widgets/weather/desc/desc_container.dart';
+import 'package:disaster_management/app/ui/widgets/weather/hourly.dart';
+import 'package:disaster_management/app/ui/widgets/weather/now.dart';
+import 'package:disaster_management/app/ui/widgets/weather/sunset_sunrise.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class PlaceInfo extends StatefulWidget {

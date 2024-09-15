@@ -1,4 +1,4 @@
-package com.yoshi.rain
+package com.example.disaster_management
 
 import android.appwidget.AppWidgetManager
 import android.content.Context

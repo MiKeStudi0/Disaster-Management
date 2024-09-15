@@ -11,17 +11,17 @@ import 'package:get/get.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:rain/app/api/api.dart';
-import 'package:rain/app/api/city_api.dart';
-import 'package:rain/app/controller/controller.dart';
-import 'package:rain/app/data/db.dart';
-import 'package:rain/app/ui/places/view/place_info.dart';
-import 'package:rain/app/ui/places/widgets/create_place.dart';
-import 'package:rain/app/ui/places/widgets/place_card.dart';
-import 'package:rain/app/ui/widgets/weather/status/status_data.dart';
-import 'package:rain/app/ui/widgets/weather/status/status_weather.dart';
-import 'package:rain/app/ui/widgets/text_form.dart';
-import 'package:rain/main.dart';
+import 'package:disaster_management/app/api/api.dart';
+import 'package:disaster_management/app/api/city_api.dart';
+import 'package:disaster_management/app/controller/controller.dart';
+import 'package:disaster_management/app/data/db.dart';
+import 'package:disaster_management/app/ui/places/view/place_info.dart';
+import 'package:disaster_management/app/ui/places/widgets/create_place.dart';
+import 'package:disaster_management/app/ui/places/widgets/place_card.dart';
+import 'package:disaster_management/app/ui/widgets/weather/status/status_data.dart';
+import 'package:disaster_management/app/ui/widgets/weather/status/status_weather.dart';
+import 'package:disaster_management/app/ui/widgets/text_form.dart';
+import 'package:disaster_management/main.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
