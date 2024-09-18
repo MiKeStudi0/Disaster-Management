@@ -57,7 +57,9 @@
         <service android:name="es.antonborri.home_widget.HomeWidgetBackgroundService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true" />
-
+          <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBJMhMpJEZEN2fubae-mdIZ-vCEXOAkHMk"/>
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />

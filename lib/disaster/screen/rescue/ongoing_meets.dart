@@ -1,6 +1,7 @@
   import 'dart:ui';
 
-  import 'package:disaster_management/disaster/screen/rescue/vedioconf.dart';
+  import 'package:disaster_management/disaster/screen/google_map/google_map.dart';
+import 'package:disaster_management/disaster/screen/rescue/vedioconf.dart';
 import 'package:disaster_management/disaster/screen/sos_screen/alert_sos.dart';
 import 'package:flutter/material.dart';
 
@@ -38,6 +39,17 @@ import 'package:flutter/material.dart';
                     );
                   },
                   child: const Text('Join Rescue Team'),
+                ),
+                  ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MapScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text('Navigation Map'),
                 ),
               ],
             ),
