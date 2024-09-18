@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:dio_cache_interceptor_file_store/dio_cache_interceptor_file_store.dart';
+import 'package:disaster_management/disaster/screen/volunteer/volunteer_list.dart';
+import 'package:disaster_management/disaster/screen/volunteer/volunteer_reg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hsvcolor_picker/flutter_hsvcolor_picker.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -1141,6 +1143,70 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               transition: Transition.downToUp,
             ),
+          ),
+          SettingCard(
+            icon: const Icon(IconsaxPlusLinear.archive_book),
+            text: 'Volunteer'.tr,
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return Padding(
+                    padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).padding.bottom),
+                    child: StatefulBuilder(
+                      builder: (BuildContext context, setState) {
+                        return SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 15),
+                                child: Text(
+                                  'Volunteer'.tr,
+                                  style: context.textTheme.titleLarge?.copyWith(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                              SettingCard(
+                                elevation: 4,
+                                icon: const Icon(
+                                    LineAwesomeIcons.person_booth_solid),
+                                text: 'Volunteer Registration',
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              VolunteerReg()));
+                                },
+                              ),
+                              SettingCard(
+                                elevation: 4,
+                                icon: const Icon(
+                                    LineAwesomeIcons.people_carry_solid),
+                                text: 'Volunteer List',
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              VolunteerList()));
+                                },
+                              ),
+                              const Gap(10),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
+            },
           ),
           SettingCard(
             icon: const Icon(IconsaxPlusLinear.hierarchy_square_2),
