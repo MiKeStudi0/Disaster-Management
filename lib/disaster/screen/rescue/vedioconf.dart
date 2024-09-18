@@ -1,3 +1,4 @@
+import 'package:disaster_management/disaster/screen/rescue/const.dart';
 import 'package:flutter/material.dart';
 import 'package:zego_uikit_prebuilt_video_conference/zego_uikit_prebuilt_video_conference.dart';
 
@@ -11,22 +12,24 @@ class VideoConferencePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Placeholder values for userID and username
-    String userID = 'exampleUserID';
-    String username = 'exampleUsername';
+    // Replace these with dynamic values or actual user data in a real application
+    final String userID = 'exampleUserID'; 
+    final String username = 'exampleUsername';
 
-    // Provide your ZEGOCLOUD appID and appSign here
-    int appID = 1750915985; // Replace with your actual appID
-    String appSign = 'f6f24cb8c9310b182bb1779aaa50998642697171d0cbb2d8de8fefe4de1f7a5d'; // Replace with your actual appSign
+    // ZEGOCLOUD app credentials (replace with actual appID and appSign)
+    const int appID = appId;
+    const String appsign = appSign;
 
-    return SafeArea(
-      child: ZegoUIKitPrebuiltVideoConference(
-        appID: appID, // Fill in the appID
-        appSign: appSign, // Fill in the appSign
-        userID: userID, // Use the placeholder userID
-        userName: username, // Use the placeholder username
-        conferenceID: conferenceID,
-        config: ZegoUIKitPrebuiltVideoConferenceConfig(),
+    return Scaffold(
+      body: SafeArea(
+        child: ZegoUIKitPrebuiltVideoConference(
+          appID: appID,
+          appSign: appsign,
+          userID: userID,
+          userName: username,
+          conferenceID: conferenceID,
+          config: ZegoUIKitPrebuiltVideoConferenceConfig(),
+        ),
       ),
     );
   }

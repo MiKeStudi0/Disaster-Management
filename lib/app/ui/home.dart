@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     const MainPage(),
     const PlaceList(),
     if (!settings.hideMap) const MapPage(),
-    const ongoingscreen(),
+     OngoingScreen(),
         const SettingsPage(),
 
   ];
