@@ -1,4 +1,5 @@
 import 'package:disaster_management/disaster/screen/chatscreen.dart';
+import 'package:disaster_management/disaster/screen/rescue/ongoing_meets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
@@ -35,8 +36,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     const MainPage(),
     const PlaceList(),
     if (!settings.hideMap) const MapPage(),
-    const SettingsPage(),
-    const Chatscreen(),
+    const ongoingscreen(),
+        const SettingsPage(),
+
   ];
 
   @override
@@ -283,15 +285,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   selectedIcon: const Icon(IconsaxPlusBold.map),
                   label: 'map'.tr,
                 ),
+            
               NavigationDestination(
+                icon: const Icon(IconsaxPlusLinear.direct_inbox),
+                selectedIcon: const Icon(IconsaxPlusBold.health),
+                label: 'Rescue'.tr,
+              ),
+                NavigationDestination(
                 icon: const Icon(IconsaxPlusLinear.category),
                 selectedIcon: const Icon(IconsaxPlusBold.category),
                 label: 'settings_full'.tr,
-              ),
-              NavigationDestination(
-                icon: const Icon(IconsaxPlusLinear.direct_inbox),
-                selectedIcon: const Icon(IconsaxPlusBold.direct_inbox),
-                label: 'chatbot'.tr,
               ),
             ],
           ),

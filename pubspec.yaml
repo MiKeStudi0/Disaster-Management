@@ -9,6 +9,7 @@ environment:
   sdk: ">=3.5.2 <4.0.0"
 
 dependencies:
+  cloud_firestore: ^5.4.2
   connectivity_plus: ^6.0.5
   device_info_plus: ^10.1.2
   dio: ^5.7.0
@@ -61,6 +62,7 @@ dependencies:
   timezone: ^0.9.4
   url_launcher: ^6.3.0
   workmanager: ^0.5.2
+  zego_uikit_prebuilt_video_conference: ^2.9.2
 
 # Uncomment this for publishing FLOSS variant
 # dependency_overrides:
