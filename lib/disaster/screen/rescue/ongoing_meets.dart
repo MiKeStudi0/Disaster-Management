@@ -1,6 +1,7 @@
   import 'dart:ui';
 
   import 'package:disaster_management/disaster/screen/rescue/vedioconf.dart';
+import 'package:disaster_management/disaster/screen/sos_screen/alert_sos.dart';
 import 'package:flutter/material.dart';
 
   class OngoingScreen extends StatefulWidget {
@@ -18,18 +19,27 @@ import 'package:flutter/material.dart';
       return Scaffold(
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(40, 1.2 * kToolbarHeight, 40, 20),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: Column(
-                children: [
-                  _buildHeader(),
-                  const SizedBox(height: 70), // Space for Divider and List
-                  _buildRescueTeamList(),
-                ],
-              ),
+        body: Padding(
+          padding: const EdgeInsets.fromLTRB(40, 1.2 * kToolbarHeight, 40, 20),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: [
+                _buildHeader(),
+                const SizedBox(height: 70), // Space for Divider and List
+                _buildRescueTeamList(),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ShakeLocationPage(),
+                      ),
+                    );
+                  },
+                  child: const Text('Join Rescue Team'),
+                ),
+              ],
             ),
           ),
         ),
@@ -37,7 +47,7 @@ import 'package:flutter/material.dart';
     }
 
     Widget _buildHeader() {
-      return Column(
+      return const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -60,7 +70,7 @@ import 'package:flutter/material.dart';
 
     Widget _buildRescueTeamList() {
       return SizedBox(
-        height: 720, // Adjust height as needed
+        height: 300, // Adjust height as needed
         child: ListView(
           scrollDirection: Axis.vertical,
           children: [
