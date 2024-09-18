@@ -56,7 +56,7 @@ class VolunteerList extends StatelessWidget {
 
                   return Container(
                     child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
+                      scrollDirection: Axis.vertical,
                       itemCount: items.length,
                       shrinkWrap: true,
                       itemBuilder: (context, i) {
