@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-import 'package:disaster_management/disaster/screen/bot/chatscreen.dart';
-=======
->>>>>>> 98b56abcceb62d3180b7d4e8c900509d94adf7c4
+import 'package:disaster_management/disaster/screen/google_map/location_alert.dart';
 import 'package:disaster_management/disaster/screen/rescue/ongoing_meets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,7 +31,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late TabController tabController;
   final weatherController = Get.put(WeatherController());
   final _controller = TextEditingController();
-
   final List<Widget> pages = [
     const MainPage(),
     const PlaceList(),
@@ -48,6 +44,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     super.initState();
     getData();
     setupTabController();
+    locationAlertFunction();
   }
 
   @override
@@ -96,7 +93,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final textTheme = context.textTheme;
     final labelLarge = textTheme.labelLarge;
-
     final textStyle = textTheme.titleMedium?.copyWith(
       fontWeight: FontWeight.w600,
       fontSize: 18,
