@@ -1,3 +1,4 @@
+import 'package:disaster_management/disaster/screen/login&signup/signup.dart';
 import 'package:gap/gap.dart';
 import 'package:disaster_management/app/data/db.dart';
 import 'package:disaster_management/app/ui/geolocation.dart';
@@ -32,8 +33,9 @@ class _OnBordingState extends State<OnBording> {
   void onBoardHome() {
     settings.onboard = true;
     isar.writeTxnSync(() => isar.settings.putSync(settings));
-    Get.off(() => const SelectGeolocation(isStart: true),
-        transition: Transition.downToUp);
+    // Get.off(() => const SelectGeolocation(isStart: true),
+    //     transition: Transition.downToUp);
+    Get.off(() => SignupPage(), transition: Transition.downToUp);
   }
 
   @override

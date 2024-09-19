@@ -1,4 +1,3 @@
-import 'package:disaster_management/disaster/screen/chatscreen.dart';
 import 'package:disaster_management/disaster/screen/rescue/ongoing_meets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
