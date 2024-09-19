@@ -42,6 +42,7 @@ dependencies:
   google_generative_ai: ^0.4.6
   google_maps_flutter: ^2.9.0
   home_widget: ^0.7.0
+  iconsax: ^0.0.8
   iconsax_plus: ^1.0.0
   internet_connection_checker_plus: ^2.5.1
   intl: ^0.19.0
