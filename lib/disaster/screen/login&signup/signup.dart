@@ -10,8 +10,11 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _addressController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
@@ -36,11 +39,8 @@ class _SignupPageState extends State<SignupPage> {
           await user.sendEmailVerification();
           Get.snackbar('Email Verification', 'A verification email has been sent. Please check your inbox.');
 
-          // Log the user out and force them to verify email before continuing
-          await FirebaseAuth.instance.signOut();
-
-          // Navigate the user back to the sign-in page
-          Get.off(() => SignInPage(), transition: Transition.leftToRight);
+          // Wait for email verification
+          await _waitForVerification(user);
         }
       } on FirebaseAuthException catch (e) {
         // Handle sign-up errors
@@ -51,6 +51,40 @@ class _SignupPageState extends State<SignupPage> {
         });
       }
     }
+  }
+
+  Future<void> _waitForVerification(User user) async {
+    // Show a waiting page
+    Get.dialog(
+      AlertDialog(
+        title: Text('Please Verify Your Email'),
+        content: Text('We have sent a verification email. Please verify to continue.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back(); // Close the dialog
+            },
+            child: Text('Okay'),
+          ),
+        ],
+      ),
+    );
+
+    // Poll for email verification
+    while (!user.emailVerified) {
+      await Future.delayed(Duration(seconds: 5));
+      await user.reload();
+      user = FirebaseAuth.instance.currentUser!;
+    }
+
+    // After verification, save user data (name, phone, address)
+    await _saveUserData(user);
+    Get.off(() => SelectGeolocation(isStart: true), transition: Transition.downToUp);
+  }
+
+  Future<void> _saveUserData(User user) async {
+    // Here, save the user's additional information (name, phone, address) to your database
+    // For example, using Firestore or Realtime Database
   }
 
   @override
@@ -64,9 +98,24 @@ class _SignupPageState extends State<SignupPage> {
           child: Column(
             children: [
               TextFormField(
+                controller: _nameController,
+                decoration: InputDecoration(labelText: 'Name'),
+                validator: (value) => value!.isEmpty ? 'Enter name' : null,
+              ),
+              TextFormField(
                 controller: _emailController,
                 decoration: InputDecoration(labelText: 'Email'),
                 validator: (value) => value!.isEmpty ? 'Enter email' : null,
+              ),
+              TextFormField(
+                controller: _phoneController,
+                decoration: InputDecoration(labelText: 'Phone Number'),
+                validator: (value) => value!.isEmpty ? 'Enter phone number' : null,
+              ),
+              TextFormField(
+                controller: _addressController,
+                decoration: InputDecoration(labelText: 'Address'),
+                validator: (value) => value!.isEmpty ? 'Enter address' : null,
               ),
               TextFormField(
                 controller: _passwordController,
