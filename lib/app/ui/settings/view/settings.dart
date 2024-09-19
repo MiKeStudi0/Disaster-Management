@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:dio_cache_interceptor_file_store/dio_cache_interceptor_file_store.dart';
+import 'package:disaster_management/disaster/screen/login&signup/signup.dart';
 import 'package:disaster_management/disaster/screen/volunteer/volunteer_list.dart';
 import 'package:disaster_management/disaster/screen/volunteer/volunteer_reg.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hsvcolor_picker/flutter_hsvcolor_picker.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -1218,9 +1220,12 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           SettingCard(
             icon: const Icon(LineAwesomeIcons.github),
-            text: '${'project'.tr} GitHub',
-            onPressed: () => weatherController
-                .urlLauncher('https://github.com/darkmoonight/Rain'),
+            text: '${'Logout'.tr} ',
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              // Navigate back to the Signup page after logging out
+              Get.off(() => SignupPage(), transition: Transition.rightToLeft);
+            },
           ),
           Padding(
             padding: const EdgeInsets.all(10),
