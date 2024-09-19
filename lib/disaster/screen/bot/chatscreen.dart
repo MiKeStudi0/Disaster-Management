@@ -50,7 +50,8 @@ class _ChatscreenState extends State<Chatscreen> {
         _speech.listen(onResult: (result) {
           setState(() {
             _spokenText = result.recognizedWords;
-            userMessage.text = _spokenText; // Set recognized text to input field
+            userMessage.text =
+                _spokenText; // Set recognized text to input field
           });
         });
       }
@@ -105,7 +106,8 @@ class _ChatscreenState extends State<Chatscreen> {
                   onTap: _listen,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: _isListening ? Colors.redAccent : Colors.blueAccent,
+                      color:
+                          _isListening ? Colors.redAccent : Colors.blueAccent,
                       shape: BoxShape.circle,
                     ),
                     child: Padding(
