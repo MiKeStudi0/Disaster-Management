@@ -1,3 +1,4 @@
+import 'package:disaster_management/disaster/screen/bar%20charts/barchart.dart';
 import 'package:disaster_management/disaster/screen/bar%20charts/piechart.dart';
 import 'package:flutter/material.dart';
 
@@ -5,9 +6,11 @@ class Charts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Pie Charts Example")),
+      appBar: AppBar(title: Text(" Charts ")),
       body: ListView(
-        children: [
+        children:  const [
+          ResourceManagementChart(),
+           
           CustomPieChart(
             values: [40, 30, 15, 15],
             colors: [Colors.blue, Colors.yellow, Colors.purple, Colors.green],
@@ -18,6 +21,7 @@ class Charts extends StatelessWidget {
             colors: [Colors.red, Colors.orange, Colors.blue, Colors.green],
             labels: ['A', 'B', 'C', 'D'],
           ),
+          
           CustomPieChart(
             values: [70, 20, 5, 5],
             colors: [Colors.pink, Colors.teal, Colors.amber, Colors.indigo],
