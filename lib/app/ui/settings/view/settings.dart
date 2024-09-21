@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio_cache_interceptor_file_store/dio_cache_interceptor_file_store.dart';
+import 'package:disaster_management/disaster/screen/bar%20charts/Charts.dart';
 import 'package:disaster_management/disaster/screen/login&signup/signup.dart';
 import 'package:disaster_management/disaster/screen/volunteer/volunteer_list.dart';
 import 'package:disaster_management/disaster/screen/volunteer/volunteer_reg.dart';
@@ -1213,6 +1214,13 @@ class _SettingsPageState extends State<SettingsPage> {
           SettingCard(
             icon: const Icon(IconsaxPlusLinear.hierarchy_square_2),
             text: 'version'.tr,
+            onPressed: (){
+               Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              Charts()));
+            },
             info: true,
             infoWidget: _TextInfo(
               info: '$appVersion',
