@@ -64,83 +64,93 @@ class _ChatscreenState extends State<Chatscreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F2), // Light background color
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Expanded(
-              child: ListView.builder(
-            itemCount: _messages.length,
-            itemBuilder: (context, index) {
-              final message = _messages[index];
-              return Messages(
-                  isUser: message.isUser,
-                  date: DateFormat('HH:mm').format(message.date),
-                  message: message.message);
+      appBar: AppBar(
+        title: Text("Chat with me"),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
             },
-          )),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15.0),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 15,
-                  child: TextFormField(
-                    controller: userMessage,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(55),
-                        borderSide: BorderSide.none,
+            icon: Icon(Icons.arrow_back_ios)),
+      ),
+      backgroundColor: const Color(0xFFF2F2F2), // Light background color
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Expanded(
+                child: ListView.builder(
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                final message = _messages[index];
+                return Messages(
+                    isUser: message.isUser,
+                    date: DateFormat('HH:mm').format(message.date),
+                    message: message.message);
+              },
+            )),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 15,
+                    child: TextFormField(
+                      controller: userMessage,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(55),
+                          borderSide: BorderSide.none,
+                        ),
+                        label: const Text("Enter your query"),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 15.0),
                       ),
-                      label: const Text("Enter your query"),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 15.0),
                     ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: _listen,
-                  child: Container(
+                  const SizedBox(width: 8),
+                  GestureDetector(
+                    onTap: _listen,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color:
+                            _isListening ? Colors.redAccent : Colors.blueAccent,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Icon(
+                          _isListening
+                              ? IconsaxPlusLinear.microphone_slash
+                              : IconsaxPlusLinear.microphone,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
                     decoration: BoxDecoration(
-                      color:
-                          _isListening ? Colors.redAccent : Colors.blueAccent,
+                      color: Colors.blueAccent,
                       shape: BoxShape.circle,
                     ),
-                    child: Padding(
+                    child: IconButton(
                       padding: const EdgeInsets.all(15),
-                      child: Icon(
-                        _isListening
-                            ? IconsaxPlusLinear.microphone_slash
-                            : IconsaxPlusLinear.microphone,
-                        color: Colors.white,
-                      ),
+                      iconSize: 30,
+                      onPressed: () {
+                        sendMessage();
+                      },
+                      icon: Icon(IconsaxPlusLinear.arrow_circle_right,
+                          color: Colors.white),
                     ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    shape: BoxShape.circle,
-                  ),
-                  child: IconButton(
-                    padding: const EdgeInsets.all(15),
-                    iconSize: 30,
-                    onPressed: () {
-                      sendMessage();
-                    },
-                    icon: Icon(IconsaxPlusLinear.arrow_circle_right,
-                        color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
