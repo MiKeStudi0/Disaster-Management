@@ -101,10 +101,13 @@ class _NavMapScreenState extends State<NavMapScreen> {
           const SizedBox(height: 8),
           _buildRescueTeamCard('Rescue Camp ', 'Kozhikode', 'Ulliyeri'),
           const SizedBox(height: 8),
+               _buildPoliceStationCard(), // Add police station block
+        const SizedBox(height: 8),
         ],
       ),
     );
   }
+  
   Widget _buildRescueTeamCard(String teamName, String location, String area) {
     return GestureDetector(
       onTap: () {
@@ -162,6 +165,40 @@ class _NavMapScreenState extends State<NavMapScreen> {
       ],
     );
   }
-
+Widget _buildPoliceStationCard() {
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MapScreen(),
+        ),
+      );
+    },
+    child: Card(
+      elevation: 5.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Police Stations Near Me',
+              style: const TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            const Icon(Icons.arrow_forward_ios, color: Colors.redAccent),
+          ],
+        ),
+      ),
+    ),
+  );
+}
 
 }

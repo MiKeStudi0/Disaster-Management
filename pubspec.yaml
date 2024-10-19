@@ -23,6 +23,7 @@ dependencies:
   fl_chart: ^0.69.0
   flutter:
     sdk: flutter
+  flutter_compass: ^0.8.0
   flutter_displaymode: ^0.6.0
   flutter_dotenv: ^5.1.0
   flutter_expandable_fab: ^2.2.0
