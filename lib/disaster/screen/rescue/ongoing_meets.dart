@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:disaster_management/disaster/screen/google_map/google_map.dart';
-import 'package:disaster_management/disaster/screen/google_map/track.dart';
 import 'package:disaster_management/disaster/screen/rescue/vedioconf.dart';
 import 'package:disaster_management/disaster/screen/sos_screen/alert_sos.dart';
 import 'package:flutter/material.dart';
@@ -44,13 +43,25 @@ class _OngoingScreenState extends State<OngoingScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(),
-              const SizedBox(height: 16),
               _buildSectionTitle('Rescue Teams Nearby'),
+               Divider(
+          color: Colors.grey[400],
+          thickness: 1,
+          endIndent: 10,
+        ),
               _buildRescueTeamList(),
                            _buildSectionTitle('Helpline Numbers'),
+                            Divider(
+          color: Colors.grey[400],
+          thickness: 1,
+          endIndent: 10,
+        ),
               _buildHelplineNumbers(),
-              const SizedBox(height: 24),
+               Divider(
+          color: Colors.grey[400],
+          thickness: 1,
+          endIndent: 10,
+        ),
               _buildSectionTitle('Important Information'),
               _buildStaticInformation(),
               const SizedBox(height: 24),
@@ -207,11 +218,11 @@ class _OngoingScreenState extends State<OngoingScreen> {
       ),
       elevation: 5.0,
       color: Colors.grey[800],
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+      child:  const Padding(
+        padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text(
               'Precautions During Disasters:',
               style: TextStyle(
