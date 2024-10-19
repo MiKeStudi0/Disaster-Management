@@ -1,47 +1,61 @@
-  import 'dart:ui';
-
-  import 'package:disaster_management/disaster/screen/google_map/google_map.dart';
+import 'dart:ui';
+import 'package:disaster_management/disaster/screen/google_map/google_map.dart';
 import 'package:disaster_management/disaster/screen/google_map/track.dart';
 import 'package:disaster_management/disaster/screen/rescue/vedioconf.dart';
 import 'package:disaster_management/disaster/screen/sos_screen/alert_sos.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-  class OngoingScreen extends StatefulWidget {
-    const OngoingScreen({super.key});
+class OngoingScreen extends StatefulWidget {
+  const OngoingScreen({super.key});
 
-    @override
-    State<OngoingScreen> createState() => _OngoingScreenState();
-  }
+  @override
+  State<OngoingScreen> createState() => _OngoingScreenState();
+}
 
-  class _OngoingScreenState extends State<OngoingScreen> {
-    int index = 0;
+class _OngoingScreenState extends State<OngoingScreen> {
+  int index = 0;
+  bool _isExpanded = false;
 
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        backgroundColor: Colors.transparent,
-        extendBodyBehindAppBar: true,
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(40, 1.2 * kToolbarHeight, 40, 20),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              children: [
-                _buildHeader(),
-                const SizedBox(height: 70), // Space for Divider and List
-                _buildRescueTeamList(),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ShakeLocationPage(),
-                      ),
-                    );
-                  },
-                  child: const Text('Join Rescue Team'),
-                ),
-                  ElevatedButton(
+  // List of helpline numbers
+  final List<Map<String, String>> _helplineNumbers = [
+    {'department': 'Police', 'number': '100'},
+    {'department': 'Fire Department', 'number': '101'},
+    {'department': 'Ambulance', 'number': '102'},
+    {'department': 'Disaster Management Services', 'number': '108'},
+    {'department': 'National Emergency Number', 'number': '112'},
+    {'department': 'Women Helpline', 'number': '1091'},
+    {'department': 'Child Helpline', 'number': '1098'},
+    {'department': 'Senior Citizen Helpline', 'number': '14567'},
+    {'department': 'Tourist Helpline', 'number': '1363'},
+    {'department': 'Railway Helpline', 'number': '139'},
+    {'department': 'Mental Health Helpline', 'number': '9152987821'},
+    {'department': 'LPG Leak Helpline', 'number': '1906'},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+    
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(),
+              const SizedBox(height: 16),
+              _buildSectionTitle('Rescue Teams Nearby'),
+              _buildRescueTeamList(),
+                           _buildSectionTitle('Helpline Numbers'),
+              _buildHelplineNumbers(),
+              const SizedBox(height: 24),
+              _buildSectionTitle('Important Information'),
+              _buildStaticInformation(),
+              const SizedBox(height: 24),
+              Center(
+                child: ElevatedButton.icon(
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -50,200 +64,295 @@ import 'package:flutter/material.dart';
                       ),
                     );
                   },
-                  child: const Text('Navigation Map'),
-                ),
-                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LocationTrackingScreen(),
-                      ),
-                    );
-                  },
-                  child: const Text('track Map'),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-
-    Widget _buildHeader() {
-      return const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Available Rescue Teams',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Divider(
-            color: Colors.white,
-            thickness: 1,
-            endIndent: 30,
-          ),
-        ],
-      );
-    }
-
-    Widget _buildRescueTeamList() {
-      return SizedBox(
-        height: 300, // Adjust height as needed
-        child: ListView(
-          scrollDirection: Axis.vertical,
-          children: [
-            _buildRescueTeamCard('Rescue Team S1', 'Kozhikode', 'Koyilandy'),
-            const SizedBox(height: 8),
-            _buildRescueTeamCard('Rescue Team S2', 'Kozhikode', 'Ulliyeri'),
-          ],
-        ),
-      );
-    }
-
-    Widget _buildRescueTeamCard(String teamName, String location, String area) {
-      return GestureDetector(
-        onTap: () {
-          _showCodeInputDialog(context, index);
-          setState(() {
-            index += 1;
-          });
-        },
-        child: InkWell(
-          child: Card(
-            elevation: 5.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Container(
-              width: MediaQuery.of(context).size.width / 2.5,
-              height: 100,
-              padding: const EdgeInsets.symmetric(horizontal: .0, vertical: .0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildTeamInfo(teamName, location, area),
-                  const SizedBox(width: 12.0),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    Widget _buildTeamInfo(String teamName, String location, String area) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(
-                Icons.call,
-                color: Color.fromARGB(255, 75, 77, 76),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
-                margin: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 3.0),
-                child: Text(
-                  teamName,
-                  style: const TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 195, 17, 4),
+                  icon: const Icon(Icons.map),
+                  label: const Text('Navigation Map'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.redAccent,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24.0, vertical: 12.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
                   ),
                 ),
               ),
             ],
           ),
-          Row(
-            children: [
-              const Icon(
-                Icons.location_on,
-                color: Color.fromARGB(255, 75, 77, 76),
-              ),
-              const SizedBox(width: 10.0),
-              Text(
-                location,
-                style: const TextStyle(
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(width: 5.0),
-              const Icon(
-                Icons.track_changes_outlined,
-                color: Color.fromARGB(255, 75, 77, 76),
-              ),
-              Text(
-                area,
-                style: const TextStyle(
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ],
-      );
-    }
-
-    Future<void> _showCodeInputDialog(BuildContext context, int index) async {
-      String enteredCode = '';
-      await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Enter Code to verify'),
-            content: TextField(
-              obscureText: true,
-              decoration: const InputDecoration(hintText: 'Enter code'),
-              onChanged: (value) {
-                enteredCode = value;
-              },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ShakeLocationPage(),
             ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _codeConfirm(enteredCode, context, index);
-                },
-                child: const Text('Submit'),
-              ),
-            ],
           );
         },
+        child: const Icon(Icons.crisis_alert_sharp),
+        backgroundColor: Colors.red,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    );
+  }
+
+  Widget _buildHeader() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Available Rescue Teams',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 22.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Divider(
+          color: Colors.grey[400],
+          thickness: 1,
+          endIndent: 30,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  Widget _buildRescueTeamList() {
+    return SizedBox(
+      height: 200,
+      child: ListView(
+        scrollDirection: Axis.vertical,
+        children: [
+          _buildRescueTeamCard('Rescue Team S1', 'Kozhikode', 'Koyilandy'),
+          const SizedBox(height: 8),
+          _buildRescueTeamCard('Rescue Team S2', 'Kozhikode', 'Ulliyeri'),
+          const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _buildHelplineNumbers() {
+    // Determine how many items to display
+    int displayCount = _isExpanded ? _helplineNumbers.length : 3;
+
+    return Column(
+      children: [
+        ..._helplineNumbers
+            .take(displayCount)
+            .map((entry) => _buildHelplineCard(entry['department']!, entry['number']!))
+            .toList(),
+        const SizedBox(height: 8),
+        TextButton(
+          onPressed: () {
+            setState(() {
+              _isExpanded = !_isExpanded;
+            });
+          },
+          child: Text(
+            _isExpanded ? 'Show Less' : 'Show More',
+            style: const TextStyle(color: Colors.redAccent),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHelplineCard(String department, String number) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      elevation: 5.0,
+      child: ListTile(
+        leading: const Icon(Icons.phone, color: Colors.redAccent),
+        title: Text(
+          department,
+          style: const TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        trailing: Text(
+          number,
+          style: const TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+          ),
+        ),
+        onTap: () => _makePhoneCall(number),
+      ),
+    );
+  }
+
+  Widget _buildStaticInformation() {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      elevation: 5.0,
+      color: Colors.grey[800],
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text(
+              'Precautions During Disasters:',
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.redAccent,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              '- Stay indoors and away from windows during a storm.',
+              style: TextStyle(fontSize: 14.0, color: Colors.white),
+            ),
+            Text(
+              '- Keep an emergency kit with essentials like water, food, and medications.',
+              style: TextStyle(fontSize: 14.0, color: Colors.white),
+            ),
+            Text(
+              '- Follow local authorities’ instructions for evacuations.',
+              style: TextStyle(fontSize: 14.0, color: Colors.white),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRescueTeamCard(String teamName, String location, String area) {
+    return GestureDetector(
+      onTap: () {
+        _showCodeInputDialog(context, index);
+        setState(() {
+          index += 1;
+        });
+      },
+      child: Card(
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildTeamInfo(teamName, location, area),
+              const Icon(Icons.arrow_forward_ios, color: Colors.redAccent),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTeamInfo(String teamName, String location, String area) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          teamName,
+          style: const TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Row(
+          children: [
+            const Icon(Icons.location_on, color: Colors.grey),
+            const SizedBox(width: 4),
+            Text(location, style: const TextStyle(fontSize: 14.0, color: Colors.white)),
+            const SizedBox(width: 8),
+            const Icon(Icons.track_changes_outlined, color: Colors.grey),
+            const SizedBox(width: 4),
+            Text(area, style: const TextStyle(fontSize: 14.0, color: Colors.white)),
+          ],
+        ),
+      ],
+    );
+  }
+
+
+  Future<void> _makePhoneCall(String number) async {
+    final Uri phoneUri = Uri(scheme: 'tel', path: number);
+    if (await canLaunchUrl(phoneUri)) {
+      await launchUrl(phoneUri);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not launch dialer')),
       );
     }
+  }
 
-    void _codeConfirm(String enteredCode, BuildContext context, int index) {
-      if (enteredCode == '1234') {
-        // Navigate to VolunteerList page
-        Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => VideoConferencePage(conferenceID: 1234.toString() + index.toString()),
-  ),
-);
-
-      } else {
-        // Show error message
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Incorrect code')),
+  Future<void> _showCodeInputDialog(BuildContext context, int index) async {
+    String enteredCode = '';
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Enter Code to verify'),
+          content: TextField(
+            obscureText: true,
+            decoration: const InputDecoration(hintText: 'Enter code'),
+            onChanged: (value) {
+              enteredCode = value;
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _codeConfirm(enteredCode, context, index);
+              },
+              child: const Text('Submit'),
+            ),
+          ],
         );
-      }
+      },
+    );
+  }
+
+  void _codeConfirm(String enteredCode, BuildContext context, int index) {
+    if (enteredCode == '1234') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VideoConferencePage(
+              conferenceID: '1234$index'),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Incorrect code')),
+      );
     }
   }
+}
