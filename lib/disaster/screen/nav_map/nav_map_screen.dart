@@ -213,7 +213,7 @@ class _NavMapScreenState extends State<NavMapScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MapScreen(keyword: 'fireforce'),
+            builder: (context) => MapScreen(keyword: 'firestation'),
           ),
         );
       },
