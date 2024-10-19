@@ -13,8 +13,8 @@ class VideoConferencePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Replace these with dynamic values or actual user data in a real application
-    final String userID = 'exampleUserID'; 
-    final String username = 'exampleUsername';
+    final String userID = '12345678'; 
+    final String username = 'exampleUsername2';
 
     // ZEGOCLOUD app credentials (replace with actual appID and appSign)
     const int appID = appId;

@@ -227,7 +227,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       style: textStyle,
                     ),
               3 => Text(
-                  'Chat with Bot'.tr,
+                  'Rescue'.tr,
                   style: textStyle,
                 ),
               4 => Text('settings_full', style: textStyle),
