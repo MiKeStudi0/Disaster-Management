@@ -74,6 +74,8 @@ final List appLanguages = [
   {'name': 'اردو', 'locale': const Locale('ur', 'PK')},
   {'name': '中文(简体)', 'locale': const Locale('zh', 'CN')},
   {'name': '中文(繁體)', 'locale': const Locale('zh', 'TW')},
+  {'name': 'മലയാളം', 'locale': const Locale('ml', 'IN')}, // Added Malayalam
+
 ];
 
 const String appGroupId = 'DARK NIGHT';

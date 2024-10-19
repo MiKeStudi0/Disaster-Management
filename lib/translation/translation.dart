@@ -1,3 +1,4 @@
+import 'package:disaster_management/translation/ml_in.dart';
 import 'package:get/get.dart';
 import 'package:disaster_management/translation/bn_in.dart';
 import 'package:disaster_management/translation/cs_cz.dart';
@@ -51,5 +52,6 @@ class Translation extends Translations {
         'hu_HU': HuHu().messages,
         'da_DK': DaDk().messages,
         'ko_KR': KoKr().messages,
+        'ml_IN': MlIn().messages,
       };
 }
