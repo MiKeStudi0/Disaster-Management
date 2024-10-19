@@ -1,9 +1,13 @@
-import 'dart:ui';
+import 'package:disaster_management/app/ui/settings/widgets/setting_card.dart';
 import 'package:disaster_management/disaster/screen/google_map/google_map.dart';
-import 'package:disaster_management/disaster/screen/rescue/vedioconf.dart';
 import 'package:disaster_management/disaster/screen/sos_screen/alert_sos.dart';
+import 'package:disaster_management/disaster/screen/volunteer/volunteer_list.dart';
+import 'package:disaster_management/disaster/screen/volunteer/volunteer_reg.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class NavMapScreen extends StatefulWidget {
   const NavMapScreen({super.key});
@@ -13,13 +17,10 @@ class NavMapScreen extends StatefulWidget {
 }
 
 class _NavMapScreenState extends State<NavMapScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-    
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -27,39 +28,37 @@ class _NavMapScreenState extends State<NavMapScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildSectionTitle('Navigation Routes'),
-               Divider(
-          color: Colors.grey[400],
-          thickness: 1,
-          endIndent: 10,
-        ),
-              _buildRescueTeamList(),
-                         
-        
-           
-          
-              const SizedBox(height: 24),
-              Center(
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MapScreen(),
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.map),
-                  label: const Text('Navigation Map'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.redAccent,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24.0, vertical: 12.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                  ),
-                ),
+              Divider(
+                color: Colors.grey[400],
+                thickness: 1,
+                endIndent: 10,
               ),
+              _buildRescueTeamList(),
+              Divider(
+                color: Colors.grey[400],
+                thickness: 1,
+                endIndent: 10,
+              ),
+              _buildSectionTitle('Volunteer Services'),
+              SettingCard(
+                elevation: 4,
+                icon: const Icon(LineAwesomeIcons.person_booth_solid),
+                text: 'Volunteer Registration',
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => VolunteerReg()));
+                },
+              ),
+              SettingCard(
+                elevation: 4,
+                icon: const Icon(LineAwesomeIcons.people_carry_solid),
+                text: 'Volunteer List',
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => VolunteerList()));
+                },
+              ),
+             
             ],
           ),
         ),
@@ -93,33 +92,36 @@ class _NavMapScreenState extends State<NavMapScreen> {
 
   Widget _buildRescueTeamList() {
     return SizedBox(
-      height: 400,
+      height: 430,
       child: ListView(
         scrollDirection: Axis.vertical,
         children: [
           _buildRescueTeamCard('Safe Location', 'Kozhikode', 'Koyilandy'),
-          const SizedBox(height: 8),
           _buildRescueTeamCard('Rescue Camp ', 'Kozhikode', 'Ulliyeri'),
-          const SizedBox(height: 8),
-               _buildPoliceStationCard(), // Add police station block
-        const SizedBox(height: 8),
-        _buildHospitalCard(), // Add hospital block
-        const SizedBox(height: 8),
+          const SizedBox(height: 10),
+          _buildSectionTitle('Emergency Services'),
+          Divider(
+            color: Colors.grey[400],
+            thickness: 1,
+            endIndent: 10,
+          ),
+          _buildPoliceStationCard(), // Add police station block
+          _buildHospitalCard(), // Add hospital block
+          _fireforcecard(), // Add fire force block
         ],
       ),
     );
   }
-  
+
   Widget _buildRescueTeamCard(String teamName, String location, String area) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MapScreen(),
-                      ),
-                    );
-        
+          context,
+          MaterialPageRoute(
+            builder: (context) => MapScreen(),
+          ),
+        );
       },
       child: Card(
         elevation: 5.0,
@@ -140,107 +142,84 @@ class _NavMapScreenState extends State<NavMapScreen> {
     );
   }
 
- 
-Widget _buildTeamInfo(String teamName, String location, String area) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        teamName,
-        style: const TextStyle(
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
+  Widget _buildTeamInfo(String teamName, String location, String area) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          teamName,
+          style: const TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
-      ),
-      const SizedBox(height: 4),
-      Row(
-        children: [
-          const Icon(Icons.location_on, color: Colors.blue), // Changed color to blue
-          const SizedBox(width: 4),
-          Text(location, style: const TextStyle(fontSize: 14.0, color: Colors.white)),
-          const SizedBox(width: 8),
-          const Icon(Icons.track_changes_outlined, color: Colors.grey),
-          const SizedBox(width: 4),
-          Text(area, style: const TextStyle(fontSize: 14.0, color: Colors.white)),
-        ],
-      ),
-    ],
-  );
-}
-
-
-
-Widget _buildPoliceStationCard() {
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MapScreen(keyword: 'police'),
-        ),
-      );
-    },
-    child: Card(
-      elevation: 5.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        const SizedBox(height: 4),
+        Row(
           children: [
-            Text(
-              'Police Stations Near Me',
-              style: const TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const Icon(Icons.arrow_forward_ios, color: Colors.redAccent),
+            const Icon(Icons.location_on,
+                color: Colors.blue), // Changed color to blue
+            const SizedBox(width: 4),
+            Text(location,
+                style: const TextStyle(fontSize: 14.0, color: Colors.white)),
+            const SizedBox(width: 8),
+            const Icon(Icons.track_changes_outlined, color: Colors.grey),
+            const SizedBox(width: 4),
+            Text(area,
+                style: const TextStyle(fontSize: 14.0, color: Colors.white)),
           ],
         ),
-      ),
-    ),
-  );
-}
+      ],
+    );
+  }
 
-Widget _buildHospitalCard() {
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MapScreen(keyword: 'hospital'),
-        ),
-      );
-    },
-    child: Card(
-      elevation: 5.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Hospital Near Me',
-              style: const TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const Icon(Icons.arrow_forward_ios, color: Colors.redAccent),
-          ],
-        ),
-      ),
-    ),
-  );
-}
+  Widget _buildPoliceStationCard() {
+    return SettingCard(
+      elevation: 4,
+      icon: const Icon(LineAwesomeIcons.call_missed_outgoing),
+      text: 'Police Station',
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MapScreen(keyword: 'police'),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildHospitalCard() {
+    return SettingCard(
+      elevation: 4,
+      icon: const Icon(LineAwesomeIcons.plus_square),
+      text: 'Hospital',
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MapScreen(keyword: 'hospital'),
+          ),
+        );
+      },
+    );
+  }
+  Widget _fireforcecard() {
+    return SettingCard(
+      elevation: 4,
+      icon: const Icon(LineAwesomeIcons.fire_solid),
+      text: 'Fire Force',
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MapScreen(keyword: 'fireforce'),
+          ),
+        );
+      },
+    );
+  }
+
+
 
 }
