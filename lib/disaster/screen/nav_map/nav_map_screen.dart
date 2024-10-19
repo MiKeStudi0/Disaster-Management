@@ -93,7 +93,7 @@ class _NavMapScreenState extends State<NavMapScreen> {
 
   Widget _buildRescueTeamList() {
     return SizedBox(
-      height: 200,
+      height: 400,
       child: ListView(
         scrollDirection: Axis.vertical,
         children: [
@@ -102,6 +102,8 @@ class _NavMapScreenState extends State<NavMapScreen> {
           _buildRescueTeamCard('Rescue Camp ', 'Kozhikode', 'Ulliyeri'),
           const SizedBox(height: 8),
                _buildPoliceStationCard(), // Add police station block
+        const SizedBox(height: 8),
+        _buildHospitalCard(), // Add hospital block
         const SizedBox(height: 8),
         ],
       ),
@@ -138,40 +140,44 @@ class _NavMapScreenState extends State<NavMapScreen> {
     );
   }
 
-  Widget _buildTeamInfo(String teamName, String location, String area) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          teamName,
-          style: const TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+ 
+Widget _buildTeamInfo(String teamName, String location, String area) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        teamName,
+        style: const TextStyle(
+          fontSize: 18.0,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
-        const SizedBox(height: 4),
-        Row(
-          children: [
-            const Icon(Icons.location_on, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text(location, style: const TextStyle(fontSize: 14.0, color: Colors.white)),
-            const SizedBox(width: 8),
-            const Icon(Icons.track_changes_outlined, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text(area, style: const TextStyle(fontSize: 14.0, color: Colors.white)),
-          ],
-        ),
-      ],
-    );
-  }
+      ),
+      const SizedBox(height: 4),
+      Row(
+        children: [
+          const Icon(Icons.location_on, color: Colors.blue), // Changed color to blue
+          const SizedBox(width: 4),
+          Text(location, style: const TextStyle(fontSize: 14.0, color: Colors.white)),
+          const SizedBox(width: 8),
+          const Icon(Icons.track_changes_outlined, color: Colors.grey),
+          const SizedBox(width: 4),
+          Text(area, style: const TextStyle(fontSize: 14.0, color: Colors.white)),
+        ],
+      ),
+    ],
+  );
+}
+
+
+
 Widget _buildPoliceStationCard() {
   return GestureDetector(
     onTap: () {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => MapScreen(),
+          builder: (context) => MapScreen(keyword: 'police'),
         ),
       );
     },
@@ -187,6 +193,42 @@ Widget _buildPoliceStationCard() {
           children: [
             Text(
               'Police Stations Near Me',
+              style: const TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            const Icon(Icons.arrow_forward_ios, color: Colors.redAccent),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget _buildHospitalCard() {
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MapScreen(keyword: 'hospital'),
+        ),
+      );
+    },
+    child: Card(
+      elevation: 5.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Hospital Near Me',
               style: const TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,

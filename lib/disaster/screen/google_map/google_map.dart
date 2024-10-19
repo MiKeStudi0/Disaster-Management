@@ -112,38 +112,75 @@
 //       ),
 //     );
 //   }
-// }import 'dart:convert';
-import 'dart:convert';import 'dart:convert';
+// }import 'dart:convert';import 'dart:convert';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 
 class MapScreen extends StatefulWidget {
+  final String? keyword;
+
+  const MapScreen({super.key, this.keyword});
   @override
   _MapScreenState createState() => _MapScreenState();
 }
 
 class _MapScreenState extends State<MapScreen> {
   late GoogleMapController _mapController;
-  final LatLng _startLocation = LatLng(11.430790, 75.699440); // Kerala
+  LatLng? _currentLocation;
   Set<Polyline> _polylines = {};
-  Set<Marker> _markers = {}; // To hold police station markers
+  Set<Marker> _markers = {};
 
   @override
   void initState() {
     super.initState();
-    _fetchPoliceStations(); // Fetch police stations when the screen initializes
+    _determinePosition();
+  }
+
+  Future<void> _determinePosition() async {
+    LocationPermission permission;
+    permission = await Geolocator.requestPermission();
+
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      // Handle permission denial appropriately
+      print('Location permissions are denied');
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    setState(() {
+      _currentLocation = LatLng(position.latitude, position.longitude);
+    });
+    _fetchPoliceStations();
+    _moveCameraToCurrentLocation();
+  }
+
+  void _moveCameraToCurrentLocation() {
+    if (_currentLocation != null) {
+      _mapController.animateCamera(
+        CameraUpdate.newLatLng(_currentLocation!),
+      );
+    }
   }
 
   void _fetchPoliceStations() async {
+    if (_currentLocation == null) return;
+
+    print('Fetching ${widget.keyword} near $_currentLocation');
     final apiKey = 'AIzaSyBJMhMpJEZEN2fubae-mdIZ-vCEXOAkHMk'; // Replace with your actual Google Places API key
     final url = Uri.https(
       'maps.googleapis.com',
       '/maps/api/place/nearbysearch/json',
       {
-        'location': '${_startLocation.latitude},${_startLocation.longitude}',
+        'location': '${_currentLocation!.latitude},${_currentLocation!.longitude}',
         'radius': '5000', // 5 km radius
-        'type': 'police',
+        'type': widget.keyword,
         'key': apiKey,
       },
     );
@@ -160,7 +197,7 @@ class _MapScreenState extends State<MapScreen> {
 
   void _addMarkers(List places) {
     setState(() {
-      _markers.clear(); // Clear existing markers
+      _markers.clear();
       for (var place in places) {
         final location = place['geometry']['location'];
         final lat = location['lat'];
@@ -172,8 +209,8 @@ class _MapScreenState extends State<MapScreen> {
             markerId: MarkerId(name),
             position: LatLng(lat, lng),
             infoWindow: InfoWindow(title: name),
+            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed), // Blue marker
             onTap: () {
-              // Get directions to this police station when tapped
               _getDirectionsToPoliceStation(LatLng(lat, lng));
             },
           ),
@@ -183,17 +220,19 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _getDirectionsToPoliceStation(LatLng policeStation) async {
+    if (_currentLocation == null) return;
+
     final apiKey = 'AIzaSyBJMhMpJEZEN2fubae-mdIZ-vCEXOAkHMk'; // Replace with your actual API key
     final url = Uri.https(
       'maps.googleapis.com',
       '/maps/api/directions/json',
       {
-        'origin': '${_startLocation.latitude},${_startLocation.longitude}',
+        'origin': '${_currentLocation!.latitude},${_currentLocation!.longitude}',
         'destination': '${policeStation.latitude},${policeStation.longitude}',
         'key': apiKey,
-        'mode': 'driving', // You can change this to 'walking', 'bicycling', or 'transit'
-        'traffic_model': 'best_guess', // Optional: traffic model
-        'departure_time': 'now', // Optional: for real-time traffic
+        'mode': 'driving',
+        'traffic_model': 'best_guess',
+        'departure_time': 'now',
       },
     );
 
@@ -205,17 +244,16 @@ class _MapScreenState extends State<MapScreen> {
         final points = routes[0]['overview_polyline']['points'];
         List<LatLng> polylineCoordinates = _decodePolyline(points);
         setState(() {
-          _polylines.clear(); // Clear previous polylines
+          _polylines.clear();
           _polylines.add(
             Polyline(
               polylineId: PolylineId('route_to_station'),
               points: polylineCoordinates,
-              color: Colors.red, // Color for route to police station
+              color: Colors.red,
               width: 5,
             ),
           );
         });
-        // Move camera to police station location
         _mapController.animateCamera(
           CameraUpdate.newLatLng(policeStation),
         );
@@ -261,19 +299,26 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Map Directions')),
-      body: GoogleMap(
-        initialCameraPosition: CameraPosition(
-          target: _startLocation,
-          zoom: 10.0, // Adjust this to focus on the route
-        ),
-        onMapCreated: (GoogleMapController controller) {
-          _mapController = controller;
-        },
-        polylines: _polylines,
-        markers: _markers.union({
-          Marker(markerId: MarkerId('start'), position: _startLocation),
-        }),
-      ),
+      body: _currentLocation == null
+          ? Center(child: CircularProgressIndicator())
+          : GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: _currentLocation!,
+                zoom: 10.0,
+              ),
+              onMapCreated: (GoogleMapController controller) {
+                _mapController = controller;
+                _moveCameraToCurrentLocation();
+              },
+              polylines: _polylines,
+              markers: _markers.union({
+                Marker(
+                  markerId: MarkerId('current_location'),
+                  position: _currentLocation!,
+                  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue), // Blue marker for current location
+                ),
+              }),
+            ),
     );
   }
 }
