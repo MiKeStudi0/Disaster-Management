@@ -1,5 +1,6 @@
 import 'package:disaster_management/disaster/screen/sos_screen/alert_sos.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:disaster_management/app/controller/controller.dart';
 import 'package:disaster_management/app/data/db.dart';
@@ -34,7 +35,7 @@ class _MainPageState extends State<MainPage> {
             ),
           );
         },
-        child: Icon(Icons.crisis_alert_sharp),
+        child: const Icon(Icons.crisis_alert_sharp),
         backgroundColor: Colors.red,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -93,6 +94,23 @@ class _MainPageState extends State<MainPage> {
                   timeNight: sunset,
                   tempMax: tempMax!,
                   tempMin: tempMin!,
+                ),
+                const Card(
+                  margin: EdgeInsets.only(bottom: 15),
+                  child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Alert Notification Here',
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 20,
+                                color: Color.fromARGB(255, 255, 18, 1)),
+                          )
+                        ],
+                      )),
                 ),
                 Card(
                   margin: const EdgeInsets.only(bottom: 15),

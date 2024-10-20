@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:disaster_management/app/ui/geolocation.dart';
+import 'package:lottie/lottie.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -62,72 +63,117 @@ class _SignInPageState extends State<SignInPage> {
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            elevation: 4,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        prefixIcon: Icon(Icons.email, color: colorScheme.primary),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: colorScheme.primary),
-                        ),
-                      ),
-                      validator: (value) => value!.isEmpty ? 'Enter email' : null,
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        prefixIcon: Icon(Icons.lock, color: colorScheme.primary),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: colorScheme.primary),
-                        ),
-                      ),
-                      validator: (value) => value!.length < 6 ? 'Password too short' : null,
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _signIn,
-                        child: const Text('Sign In'),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+          child: Column(
+            children: [
+              Lottie.asset(
+                    'assets/animation/Animation - 1729439846104.json'),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                elevation: 8,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch, // Align items to stretch
+                      children: [
+                        Text(
+                          'Welcome Back!',
+                          style:  TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color:colorScheme.primary.withOpacity(0.9)),
+                        ), 
+                        const SizedBox(height: 20),
+                        _buildTextField(_emailController, 'Email', Icons.email),
+                        const SizedBox(height: 16),
+                        _buildPasswordField(),
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: _signIn,
+                            child: const Text('Sign In'),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              elevation: 5,
+                              shadowColor: colorScheme.primary.withOpacity(0.5),
+                            ),
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 10),
+                        TextButton(
+                          onPressed: () {
+                            Get.to(() => SignupPage(), transition: Transition.rightToLeft);
+                          },
+                          child: const Text('Don’t have an account? Sign up'),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 10),
-                    TextButton(
-                      onPressed: () {
-                        Get.to(() => SignupPage(), transition: Transition.rightToLeft);
-                      },
-                      child: const Text('Don’t have an account? Sign up'),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),
+    );
+  }
+
+  TextFormField _buildTextField(TextEditingController controller, String label, IconData icon) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: colorScheme.onBackground),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: colorScheme.onBackground),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: colorScheme.secondary),
+        ),
+      ),
+      validator: (value) => value!.isEmpty ? 'Enter $label' : null,
+    );
+  }
+
+  TextFormField _buildPasswordField() {
+    final colorScheme = Theme.of(context).colorScheme;
+    bool _isPasswordVisible = false;
+
+    return TextFormField(
+      controller: _passwordController,
+      obscureText: !_isPasswordVisible,
+      decoration: InputDecoration(
+        labelText: 'Password',
+        prefixIcon: Icon(Icons.lock, color: colorScheme.onBackground),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: colorScheme.onBackground),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: colorScheme.secondary),
+        ),
+        suffixIcon: IconButton(
+          icon: Icon(
+            _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+            color: colorScheme.onSurface,
+          ),
+          onPressed: () {
+            setState(() {
+              _isPasswordVisible = !_isPasswordVisible;
+            });
+          },
+        ),
+      ),
+      validator: (value) => value!.length < 6 ? 'Password too short' : null,
     );
   }
 }

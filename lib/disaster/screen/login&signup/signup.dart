@@ -140,10 +140,11 @@ class _SignupPageState extends State<SignupPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              
               const Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
-                  'Get Started.....',
+                  'Disaster Management',
                   style: TextStyle(
                     fontFamily: 'Poppins',
                       fontSize: 24,
