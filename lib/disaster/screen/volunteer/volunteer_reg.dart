@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class VolunteerReg extends StatefulWidget {
   const VolunteerReg({Key? key}) : super(key: key);
@@ -32,336 +33,190 @@ class _VolunteerRegState extends State<VolunteerReg> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          appBar: AppBar(
-            title: const Text(
-              'Volunteers Registration',
-              style: TextStyle(color: Colors.black),
-            ),
-            backgroundColor: Colors.white,
-            elevation: 0,
-            automaticallyImplyLeading: true,
-            iconTheme: const IconThemeData(
-              color: Colors.black,
-            ),
-          ),
-          backgroundColor: Colors.white,
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10.0),
-            child: SingleChildScrollView(
-                child: Form(
-              key: key,
-              child: Column(children: [
-                const SizedBox(height: 50),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(4, 10, 4, 4),
-                  padding: const EdgeInsets.all(1.0),
-                  child: TextFormField(
-                    controller: _controllerName,
-                    style: const TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person),
-                      prefixIconColor: const Color.fromARGB(255, 3, 0, 195),
-                      contentPadding: const EdgeInsets.only(
-                          left: 14.0, bottom: 2.0, top: 14.0),
-                      hintText: 'Enter Your Name ',
-                      focusColor: const Color.fromARGB(255, 0, 0, 0),
-                      //  border: OutlineInputBorder(),
-                      border: InputBorder.none,
-                      filled: true,
-                      fillColor: const Color.fromARGB(255, 157, 155, 155),
-                      //  focusColor: Colors.grey,
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(25.7)),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 237, 235, 235)),
-                        borderRadius: BorderRadius.circular(25.7),
-                      ),
-                    ),
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your name';
-                      }
-                      return null;
-                    },
-                  ),
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Volunteers Registration'),
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10.0),
+        child: SingleChildScrollView(
+          child: Form(
+            key: key,
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                _buildTextField(
+                  controller: _controllerName,
+                  hint: 'Enter Your Name',
+                  icon: Icons.person,
+                  validatorMessage: 'Please enter your name',
+                  colorScheme: colorScheme,
+                  textTheme: textTheme,
                 ),
-                const SizedBox(height: 8.0),
-                Container(
-                  margin: const EdgeInsets.all(1.0),
-                  padding: const EdgeInsets.all(1.0),
-                  child: TextFormField(
-                    controller: _controllerCnumber,
-                    style: const TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.phone),
-                      prefixIconColor: const Color.fromARGB(255, 3, 0, 195),
-                      contentPadding: const EdgeInsets.only(
-                          left: 14.0, bottom: 2.0, top: 14.0),
-                      hintText: 'Enter Your Contact No ',
-                      focusColor: const Color.fromARGB(255, 0, 0, 0),
-                      //  border: OutlineInputBorder(),
-                      border: InputBorder.none,
-                      filled: true,
-                      fillColor: const Color.fromARGB(255, 157, 155, 155),
-                      //  focusColor: Colors.grey,
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(25.7)),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 237, 235, 235)),
-                        borderRadius: BorderRadius.circular(25.7),
-                      ),
-                    ),
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your Contact No';
-                      }
-                      return null;
-                    },
-                  ),
+                const SizedBox(height: 12.0),
+                _buildTextField(
+                  controller: _controllerCnumber,
+                  hint: 'Enter Your Contact No',
+                  icon: Icons.phone,
+                  validatorMessage: 'Please enter your Contact No',
+                  colorScheme: colorScheme,
+                  textTheme: textTheme,
                 ),
-                const SizedBox(height: 8.0),
-                Container(
-                  margin: const EdgeInsets.all(1.0),
-                  padding: const EdgeInsets.all(1.0),
-                  child: TextFormField(
-                    controller: _controllerState,
-                    style: const TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(
-                        Icons.location_on_outlined,
-                      ),
-                      prefixIconColor: const Color.fromARGB(255, 3, 0, 195),
-                      contentPadding: const EdgeInsets.only(
-                          left: 14.0, bottom: 2.0, top: 14.0),
-                      hintText: 'Enter State ',
-                      focusColor: const Color.fromARGB(255, 0, 0, 0),
-                      //  border: OutlineInputBorder(),
-                      border: InputBorder.none,
-                      filled: true,
-                      fillColor: const Color.fromARGB(255, 157, 155, 155),
-                      //  focusColor: Colors.grey,
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(25.7)),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 237, 235, 235)),
-                        borderRadius: BorderRadius.circular(25.7),
-                      ),
-                    ),
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter state';
-                      }
-                      return null;
-                    },
-                  ),
+                const SizedBox(height: 12.0),
+                _buildTextField(
+                  controller: _controllerState,
+                  hint: 'Enter State',
+                  icon: Icons.location_on_outlined,
+                  validatorMessage: 'Please enter state',
+                  colorScheme: colorScheme,
+                  textTheme: textTheme,
                 ),
-                const SizedBox(height: 8.0),
-                Container(
-                  margin: const EdgeInsets.all(1.0),
-                  padding: const EdgeInsets.all(1.0),
-                  child: TextFormField(
-                    controller: _controllerDistrict,
-                    style: const TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(
-                        Icons.location_on_outlined,
-                      ),
-                      prefixIconColor: const Color.fromARGB(255, 3, 0, 195),
-                      contentPadding: const EdgeInsets.only(
-                          left: 14.0, bottom: 2.0, top: 14.0),
-                      hintText: 'Enter District ',
-                      focusColor: const Color.fromARGB(255, 0, 0, 0),
-                      //  border: OutlineInputBorder(),
-                      border: InputBorder.none,
-                      filled: true,
-                      fillColor: const Color.fromARGB(255, 157, 155, 155),
-                      //  focusColor: Colors.grey,
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(25.7)),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 237, 235, 235)),
-                        borderRadius: BorderRadius.circular(25.7),
-                      ),
-                    ),
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter district';
-                      }
-                      return null;
-                    },
-                  ),
+                const SizedBox(height: 12.0),
+                _buildTextField(
+                  controller: _controllerDistrict,
+                  hint: 'Enter District',
+                  icon: Icons.location_on_outlined,
+                  validatorMessage: 'Please enter district',
+                  colorScheme: colorScheme,
+                  textTheme: textTheme,
                 ),
-                const SizedBox(height: 8.0),
-                Container(
-                  margin: const EdgeInsets.all(1.0),
-                  padding: const EdgeInsets.all(1.0),
-                  child: TextFormField(
-                    controller: _controllerAddress,
-                    style: const TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(
-                        Icons.location_on,
-                      ),
-                      prefixIconColor: const Color.fromARGB(255, 3, 0, 195),
-                      contentPadding: const EdgeInsets.only(
-                          left: 14.0, bottom: 2.0, top: 14.0),
-                      hintText: 'Enter your Address ',
-                      focusColor: const Color.fromARGB(255, 0, 0, 0),
-                      //  border: OutlineInputBorder(),
-                      border: InputBorder.none,
-                      filled: true,
-                      fillColor: const Color.fromARGB(255, 157, 155, 155),
-                      //  focusColor: Colors.grey,
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(25.7)),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 237, 235, 235)),
-                        borderRadius: BorderRadius.circular(25.7),
-                      ),
-                    ),
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your address';
-                      }
-                      return null;
-                    },
-                  ),
+                const SizedBox(height: 12.0),
+                _buildTextField(
+                  controller: _controllerAddress,
+                  hint: 'Enter your Address',
+                  icon: Icons.location_on,
+                  validatorMessage: 'Please enter your address',
+                  colorScheme: colorScheme,
+                  textTheme: textTheme,
                 ),
-                const SizedBox(height: 8.0),
-                Container(
-                  margin: const EdgeInsets.all(1.0),
-                  padding: const EdgeInsets.all(1.0),
-                  child: TextFormField(
-                    controller: _controllerInterests,
-                    style: const TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.handshake_sharp),
-                      prefixIconColor: const Color.fromARGB(255, 3, 0, 195),
-                      contentPadding: const EdgeInsets.only(
-                          left: 14.0, bottom: 2.0, top: 14.0),
-                      hintText: 'Your interests to work in ',
-                      focusColor: const Color.fromARGB(255, 0, 0, 0),
-                      //  border: OutlineInputBorder(),
-                      border: InputBorder.none,
-                      filled: true,
-                      fillColor: const Color.fromARGB(255, 157, 155, 155),
-                      //  focusColor: Colors.grey,
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(25.7)),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 237, 235, 235)),
-                        borderRadius: BorderRadius.circular(25.7),
-                      ),
-                    ),
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter ';
-                      }
-                      return null;
-                    },
-                  ),
+                const SizedBox(height: 12.0),
+                _buildTextField(
+                  controller: _controllerInterests,
+                  hint: 'Your interests to work in',
+                  icon: Icons.handshake_sharp,
+                  validatorMessage: 'Please enter your interests',
+                  colorScheme: colorScheme,
+                  textTheme: textTheme,
                 ),
-                const SizedBox(height: 15.0),
-                Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 13, vertical: 3),
-                    decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 76, 104, 175),
-                        borderRadius: BorderRadius.circular(30)),
-                    child: InkWell(
-                      child: const Padding(
-                        padding: EdgeInsets.all(12.0),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Center(
-                            child: Text('Submit',
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white)),
-                          ),
+                const SizedBox(height: 20.0),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (key.currentState!.validate()) {
+                      String vName = _controllerName.text;
+                      String vNumber = _controllerCnumber.text;
+                      String vState = _controllerState.text;
+                      String vDistrict = _controllerDistrict.text;
+                      String vAddress = _controllerAddress.text;
+                      String vInterests = _controllerInterests.text;
+
+                      Map<String, String> dataToSend = {
+                        'name': vName,
+                        'number': vNumber,
+                        'state': vState,
+                        'district': vDistrict,
+                        'address': vAddress,
+                        'interests': vInterests,
+                      };
+                      _reference.add(dataToSend);
+                      Navigator.pop(context);
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text("Success"),
+                            content:
+                                const Text("Volunteer Registered Successfully"),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("OK"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: colorScheme.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    padding: const EdgeInsets.all(16.0),
+                  ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Center(
+                      child: Text(
+                        'Submit',
+                        style: textTheme.titleLarge?.copyWith(
+                          color: colorScheme.onPrimary,
                         ),
                       ),
-                      onTap: () async {
-                        if (key.currentState!.validate()) {
-                          String vName = _controllerName.text;
-                          String vNumber = _controllerCnumber.text;
-                          String vState = _controllerState.text;
-                          String vDistrict = _controllerDistrict.text;
-                          String vAddress = _controllerAddress.text;
-                          String vInterests = _controllerInterests.text;
-
-                          Map<String, String> dataToSend = {
-                            'name': vName,
-                            'number': vNumber,
-                            'state': vState,
-                            'district': vDistrict,
-                            'address': vAddress,
-                            'interests': vInterests,
-                          };
-                          _reference.add(dataToSend);
-                          //   clearText();
-                          Navigator.pop(context);
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text("Success"),
-                                content: const Text(
-                                    "Volunteer Registered Successfully"),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context)
-                                          .pop(); // Closes the dialog
-                                    },
-                                    child: const Text("OK"),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      },
-                    ))
-              ]),
-            )),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ],
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hint,
+    required IconData icon,
+    required String validatorMessage,
+    required ColorScheme colorScheme,
+    required TextTheme textTheme,
+  }) {
+    return Container(
+      margin: const EdgeInsets.all(4.0),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(25.7),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow,
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: TextFormField(
+        controller: controller,
+        style: textTheme.bodyLarge?.copyWith(
+          fontWeight: FontWeight.bold,
+          color: colorScheme.onSurface,
+        ),
+        decoration: InputDecoration(
+          prefixIcon: Icon(icon, color: colorScheme.primary),
+          hintText: hint,
+          hintStyle: textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onSurface.withOpacity(0.6),
+          ),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 18.0,
+            horizontal: 16.0,
+          ),
+        ),
+        validator: (String? value) {
+          if (value == null || value.isEmpty) {
+            return validatorMessage;
+          }
+          return null;
+        },
+      ),
     );
   }
 }

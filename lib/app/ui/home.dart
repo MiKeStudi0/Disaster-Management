@@ -1,4 +1,5 @@
 import 'package:disaster_management/disaster/screen/google_map/location_alert.dart';
+import 'package:disaster_management/disaster/screen/nav_map/nav_map_screen.dart';
 import 'package:disaster_management/disaster/screen/rescue/ongoing_meets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,7 +35,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final List<Widget> pages = [
     const MainPage(),
     const PlaceList(),
-    if (!settings.hideMap) const MapPage(),
+    if (!settings.hideMap) const NavMapScreen(),
     OngoingScreen(),
     const SettingsPage(),
   ];
@@ -227,7 +228,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       style: textStyle,
                     ),
               3 => Text(
-                  'Rescue'.tr,
+                  'Available Rescue '.tr,
                   style: textStyle,
                 ),
               4 => Text('settings_full', style: textStyle),
