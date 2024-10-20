@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:disaster_management/disaster/screen/Notifi/alert/notification_screen.dart';
 import 'package:disaster_management/firebase_options.dart';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,6 +30,8 @@ import 'package:time_machine/time_machine.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:workmanager/workmanager.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore1;
+// If there's another Firestore-like package, import it with an alias.
 
 late Isar isar;
 late Settings settings;
@@ -231,6 +234,15 @@ class _MyAppState extends State<MyApp> {
       amoledTheme = newAmoledTheme;
     });
   }
+ void saveTokenToDatabase(String userId, [String? newToken]) async {
+    String? token = newToken ?? await FirebaseMessaging.instance.getToken();
+
+    if (token != null) {
+      await firestore1.FirebaseFirestore.instance.collection('userTokens').doc(userId).set({
+        'token': token,
+      });
+    }
+  }
 
   void changeMarerialTheme(bool newMaterialColor) {
     setState(() {
@@ -273,6 +285,7 @@ class _MyAppState extends State<MyApp> {
       locale = newLocale;
     });
   }
+  
 
 
   void changeWidgetBackgroundColor(String newWidgetBackgroundColor) {
@@ -304,8 +317,35 @@ class _MyAppState extends State<MyApp> {
       HomeWidget.setAppGroupId(appGroupId);
     }
     super.initState();
-  }
+    _saveUserToken();
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+      _saveUserToken(newToken);
   
+    });
+  }
+    void _saveUserToken([String? newToken]) async {
+    // Get the currently signed-in user.
+    User? user = FirebaseAuth.instance.currentUser;
+
+    // Check if the user is logged in.
+    if (user != null) {
+      String userId = user.uid; // Get the user ID.
+      String? token = newToken ?? await FirebaseMessaging.instance.getToken();
+
+      if (token != null) {
+        await firestore1.FirebaseFirestore.instance
+            .collection('userTokens')
+            .doc(userId)
+            .set({
+          'token': token,
+        });
+        print('Token saved for user: $userId');
+      }
+    } else {
+      print('User is not logged in.');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
