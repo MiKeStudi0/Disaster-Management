@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:disaster_management/disaster/screen/Notifi/alert/notification_screen.dart';
 import 'package:disaster_management/firebase_options.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -86,6 +87,8 @@ void callbackDispatcher() {
   });
 }
 
+
+
 void main() async {
   final String timeZoneName;
   WidgetsFlutterBinding.ensureInitialized();
@@ -140,6 +143,7 @@ Future<void> setOptimalDisplayMode() async {
       sameResolution.isNotEmpty ? sameResolution.first : active;
   await FlutterDisplayMode.setPreferredMode(mostOptimalMode);
 }
+
 
 Future<void> isarInit() async {
   isar = await Isar.open([
@@ -268,6 +272,7 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+
   void changeWidgetBackgroundColor(String newWidgetBackgroundColor) {
     setState(() {
       widgetBackgroundColor = newWidgetBackgroundColor;
@@ -298,6 +303,7 @@ class _MyAppState extends State<MyApp> {
     }
     super.initState();
   }
+  
 
   @override
   Widget build(BuildContext context) {

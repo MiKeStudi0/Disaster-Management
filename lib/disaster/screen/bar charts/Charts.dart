@@ -1,3 +1,4 @@
+import 'package:disaster_management/disaster/screen/Notifi/alert/alertbox.dart';
 import 'package:disaster_management/disaster/screen/bar%20charts/barchart.dart';
 import 'package:disaster_management/disaster/screen/bar%20charts/piechart.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,8 @@ class Charts extends StatelessWidget {
             colors: [Colors.red, Colors.orange, Colors.blue, Colors.green],
             labels: ['A', 'B', 'C', 'D'],
           ),
+         Padding(padding: EdgeInsets.only(top: 20),
+         child: AlertBox(),),
           
           CustomPieChart(
             values: [70, 20, 5, 5],
@@ -31,5 +34,6 @@ class Charts extends StatelessWidget {
         ],
       ),
     );
+
   }
 }
