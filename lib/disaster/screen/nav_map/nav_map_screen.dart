@@ -59,15 +59,7 @@ class _NavMapScreenState extends State<NavMapScreen> {
                       MaterialPageRoute(builder: (context) => VolunteerList()));
                 },
               ),
-               SettingCard(
-                elevation: 4,
-                icon: const Icon(LineAwesomeIcons.book_dead_solid),
-                text: 'Awareness',
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => StaticdataScreen()));
-                },
-              ),
+             
              
             ],
           ),

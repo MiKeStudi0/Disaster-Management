@@ -1,8 +1,11 @@
 import 'dart:ui';
+import 'package:disaster_management/app/ui/settings/widgets/setting_card.dart';
 import 'package:disaster_management/disaster/screen/google_map/google_map.dart';
 import 'package:disaster_management/disaster/screen/rescue/vedioconf.dart';
 import 'package:disaster_management/disaster/screen/sos_screen/alert_sos.dart';
+import 'package:disaster_management/disaster/screen/static/static_awarness.dart';
 import 'package:flutter/material.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OngoingScreen extends StatefulWidget {
@@ -212,42 +215,15 @@ class _OngoingScreenState extends State<OngoingScreen> {
   }
 
   Widget _buildStaticInformation() {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      elevation: 5.0,
-      color: Colors.grey[800],
-      child:  const Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Precautions During Disasters:',
-              style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.redAccent,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              '- Stay indoors and away from windows during a storm.',
-              style: TextStyle(fontSize: 14.0, color: Colors.white),
-            ),
-            Text(
-              '- Keep an emergency kit with essentials like water, food, and medications.',
-              style: TextStyle(fontSize: 14.0, color: Colors.white),
-            ),
-            Text(
-              '- Follow local authorities’ instructions for evacuations.',
-              style: TextStyle(fontSize: 14.0, color: Colors.white),
-            ),
-          ],
-        ),
-      ),
-    );
+    return   SettingCard(
+                elevation: 4,
+                icon: const Icon(LineAwesomeIcons.book_dead_solid),
+                text: 'Awareness',
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => StaticdataScreen()));
+                },
+              );
   }
 
   Widget _buildRescueTeamCard(String teamName, String location, String area) {

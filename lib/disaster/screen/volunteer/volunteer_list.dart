@@ -14,218 +14,140 @@ class VolunteerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          appBar: AppBar(
-            title: const Text(
-              'Volunteers List',
-              style: TextStyle(color: Colors.black),
-            ),
-            backgroundColor: Colors.white,
-            elevation: 0,
-            automaticallyImplyLeading: true,
-            iconTheme: const IconThemeData(
-              color: Colors.black,
-            ),
-          ),
-          backgroundColor: Colors.white,
-          body: Container(
-            decoration: const BoxDecoration(),
-            child: StreamBuilder<QuerySnapshot>(
-              stream: _stream,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasError) {
-                  return Center(
-                      child: Text('Some error occurred ${snapshot.error}'));
-                }
+    final colorScheme = Theme.of(context).colorScheme;
 
-                if (snapshot.hasData) {
-                  QuerySnapshot querySnapshot = snapshot.data;
-                  List<QueryDocumentSnapshot> documents = querySnapshot.docs;
-
-                  List<Map> items = documents
-                      .map((e) => {
-                            'id': e.id,
-                            'name': e['name'],
-                            'number': e['number'],
-                            'district': e['district'],
-                            // 'district':,
-                          })
-                      .toList();
-
-                  return Container(
-                    child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      itemCount: items.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, i) {
-                        final sortedDis = items
-                          ..sort((item1, item2) =>
-                              item1['district'].compareTo(item2['district']));
-                        Map disaster = sortedDis[i];
-                        // Map thisItem = items[i];
-                        return Volunteer(disaster['id']);
-                      },
-                    ),
-                  );
-                }
-
-                return const Center(child: CircularProgressIndicator());
-              },
-            ),
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Volunteers List',
+          style: TextStyle(color: Colors.black),
         ),
-      ],
+        backgroundColor: Colors.white,
+        elevation: 0,
+        automaticallyImplyLeading: true,
+        iconTheme: const IconThemeData(
+          color: Colors.black,
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: StreamBuilder<QuerySnapshot>(
+          stream: _stream,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text('Some error occurred: ${snapshot.error}'),
+              );
+            }
+
+            if (snapshot.hasData) {
+              QuerySnapshot querySnapshot = snapshot.data;
+              List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+
+              List<Map> items = documents
+                  .map((e) => {
+                        'id': e.id,
+                        'name': e['name'],
+                        'number': e['number'],
+                        'district': e['district'],
+                        'address': e['address'],
+                      })
+                  .toList();
+
+              // Sort the items by 'district'
+              final sortedItems = items
+                ..sort((a, b) => a['district'].compareTo(b['district']));
+
+              return ListView.builder(
+                itemCount: sortedItems.length,
+                itemBuilder: (context, index) {
+                  return VolunteerCard(sortedItems[index]);
+                },
+              );
+            }
+
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
+      ),
     );
   }
 }
 
-class Volunteer extends StatelessWidget {
-  Volunteer(this.itemId, {Key? key}) : super(key: key) {
-    _reference = FirebaseFirestore.instance.collection('volunteer').doc(itemId);
-    _futureData = _reference.get();
-  }
+class VolunteerCard extends StatelessWidget {
+  final Map volunteerData;
 
-  String itemId;
-  late DocumentReference _reference;
-  late Future<DocumentSnapshot> _futureData;
-  late Map data;
+  VolunteerCard(this.volunteerData, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<DocumentSnapshot>(
-        future: _futureData,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasError) {
-            return Center(child: Text('Some error occurred ${snapshot.error}'));
-          }
+    final colorScheme = Theme.of(context).colorScheme;
 
-          if (snapshot.hasData) {
-            DocumentSnapshot documentSnapshot = snapshot.data;
-            data = documentSnapshot.data() as Map;
-
-            return Container(
-                width: 250,
-                // padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                // margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                child: InkWell(
-                  child: Card(
-                      elevation: 5.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      elevation: 4,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(Icons.person, color: colorScheme.primary),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    volunteerData['name'],
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Phone: ${volunteerData['number']}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: colorScheme.onSurface.withOpacity(0.7),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(Icons.location_on, color: colorScheme.primary),
+                      const SizedBox(width: 4),
+                      Text(
+                        volunteerData['district'],
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: colorScheme.onSurface,
+                        ),
                       ),
-                      child: Container(
-                          width: MediaQuery.of(context).size.width / 3,
-                          height: MediaQuery.of(context).size.width / 3,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: .0, vertical: .0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.person,
-                                        color: Color.fromARGB(255, 75, 77, 76),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 4.0, vertical: 4.0),
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 3.0, vertical: 3.0),
-                                        child: Text('${data['name']}',
-                                            style: const TextStyle(
-                                                fontSize: 18.0,
-                                                fontWeight: FontWeight.bold,
-                                                color: Color.fromARGB(
-                                                    255, 195, 17, 4))),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 4.0, vertical: 4.0),
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 3.0, vertical: 3.0),
-                                        child: Text(
-                                          '${data['number']}',
-                                          style: const TextStyle(
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.bold,
-                                            color:
-                                                Color.fromARGB(255, 71, 70, 70),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-
-                                  // SizedBox(height: 5.0),
-                                  Container(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            const Icon(
-                                              Icons.location_on,
-                                              color: Color.fromARGB(
-                                                  255, 75, 77, 76),
-                                            ),
-                                            const SizedBox(width: 10.0),
-                                            Text(
-                                              '${data['district']}  ',
-                                              style: const TextStyle(
-                                                fontSize: 15.0,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 5.0),
-                                            const Icon(
-                                              Icons.track_changes_outlined,
-                                              color: Color.fromARGB(
-                                                  255, 75, 77, 76),
-                                            ),
-                                            Text(
-                                              '   ${data['address']}',
-                                              style: const TextStyle(
-                                                fontSize: 15.0,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(width: 12.0),
-                              // Container(
-                              //     child: Row(
-                              //   children: [
-                              //     const Icon(Icons.location_on,
-                              //         color: Color.fromARGB(255, 75, 77, 76)),
-                              //     const SizedBox(width: 5.0),
-                              //     Text('${data['district']}',
-                              //         style: const TextStyle(
-                              //           fontSize: 15.0,
-                              //           fontWeight: FontWeight.bold,
-                              //           // color: Color.fromARGB(153, 23, 1, 1),
-                              //         )),
-                              //   ],
-                              // ))
-                            ],
-                          ))),
-                ));
-          }
-          return const Center(child: CircularProgressIndicator());
-        });
+                      const SizedBox(width: 12),
+                      Icon(Icons.track_changes_outlined,
+                          color: colorScheme.primary),
+                      const SizedBox(width: 4),
+                      Text(
+                        volunteerData['address'],
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
