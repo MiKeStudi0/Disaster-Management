@@ -1,6 +1,7 @@
 import 'package:disaster_management/app/ui/settings/widgets/setting_card.dart';
 import 'package:disaster_management/disaster/screen/google_map/google_map.dart';
 import 'package:disaster_management/disaster/screen/sos_screen/alert_sos.dart';
+import 'package:disaster_management/disaster/screen/static/static_awarness.dart';
 import 'package:disaster_management/disaster/screen/volunteer/volunteer_list.dart';
 import 'package:disaster_management/disaster/screen/volunteer/volunteer_reg.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +57,15 @@ class _NavMapScreenState extends State<NavMapScreen> {
                 onPressed: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => VolunteerList()));
+                },
+              ),
+               SettingCard(
+                elevation: 4,
+                icon: const Icon(LineAwesomeIcons.book_dead_solid),
+                text: 'Awareness',
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => StaticdataScreen()));
                 },
               ),
              
