@@ -1,3 +1,5 @@
+import 'package:disaster_management/disaster/screen/Notifi/alert/alert_screen.dart';
+import 'package:disaster_management/disaster/screen/Notifi/alert/alertbox.dart';
 import 'package:disaster_management/disaster/screen/sos_screen/alert_sos.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -95,22 +97,18 @@ class _MainPageState extends State<MainPage> {
                   tempMax: tempMax!,
                   tempMin: tempMin!,
                 ),
-                const Card(
-                  margin: EdgeInsets.only(bottom: 15),
-                  child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Alert Notification Here',
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 20,
-                                color: Color.fromARGB(255, 255, 18, 1)),
-                          )
-                        ],
-                      )),
+                GestureDetector(
+                  child: AlertBox(),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NotificationsPage(),
+                        ));
+                  },
+                ),
+                SizedBox(
+                  height: 5,
                 ),
                 Card(
                   margin: const EdgeInsets.only(bottom: 15),

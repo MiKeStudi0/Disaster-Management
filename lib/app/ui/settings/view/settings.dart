@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio_cache_interceptor_file_store/dio_cache_interceptor_file_store.dart';
+import 'package:disaster_management/disaster/screen/Notifi/alert/alert_screen.dart';
 import 'package:disaster_management/disaster/screen/Notifi/alert/notification_screen.dart';
 import 'package:disaster_management/disaster/screen/bar%20charts/Charts.dart';
 import 'package:disaster_management/disaster/screen/bar%20charts/admindemo.dart';
@@ -1272,14 +1273,16 @@ class _SettingsPageState extends State<SettingsPage> {
                 info: '$appVersion',
               ),
             ),
-             SettingCard(
+            SettingCard(
               icon: const Icon(IconsaxPlusLinear.hierarchy_square_2),
               text: 'Notification'.tr,
               onPressed: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => AppNotificationsScreen()));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NotificationsPage(),
+                    ));
               },
-             
             ),
             SettingCard(
               icon: const Icon(LineAwesomeIcons.github),

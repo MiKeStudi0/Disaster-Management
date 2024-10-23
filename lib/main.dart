@@ -26,6 +26,7 @@ import 'package:disaster_management/theme/theme.dart';
 import 'package:disaster_management/theme/theme_controller.dart';
 import 'package:disaster_management/translation/translation.dart';
 import 'package:disaster_management/app/utils/device_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:time_machine/time_machine.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -79,7 +80,6 @@ final List appLanguages = [
   {'name': '中文(简体)', 'locale': const Locale('zh', 'CN')},
   {'name': '中文(繁體)', 'locale': const Locale('zh', 'TW')},
   {'name': 'മലയാളം', 'locale': const Locale('ml', 'IN')}, // Added Malayalam
-
 ];
 
 const String appGroupId = 'DARK NIGHT';
@@ -92,14 +92,15 @@ void callbackDispatcher() {
   });
 }
 
-
-
 void main() async {
   final String timeZoneName;
   WidgetsFlutterBinding.ensureInitialized();
-  await await Firebase.initializeApp(
+  await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseMessaging.instance.subscribeToTopic('all');
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   Connectivity()
       .onConnectivityChanged
       .listen((List<ConnectivityResult> result) {
@@ -125,7 +126,7 @@ void main() async {
   const DarwinInitializationSettings initializationSettingsDarwin =
       DarwinInitializationSettings();
   const LinuxInitializationSettings initializationSettingsLinux =
-      LinuxInitializationSettings(defaultActionName: 'Rain');
+      LinuxInitializationSettings(defaultActionName: 'DisasterRelief');
   const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
     iOS: initializationSettingsDarwin,
@@ -133,6 +134,42 @@ void main() async {
   );
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   runApp(const MyApp());
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print("Handling a background message: ${message.messageId}");
+}
+
+Future<void> _saveNotification(RemoteMessage message) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  List<String>? notifications = prefs.getStringList('notifications') ?? [];
+  String notification =
+      "${message.notification?.title ?? 'No Title'}::${message.notification?.body ?? 'No Body'}";
+  notifications.add(notification);
+  await prefs.setStringList('notifications', notifications);
+}
+
+void _showNotification(RemoteMessage message) {
+  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+    'Disaster Relief',
+    'Alerts',
+    importance: Importance.max,
+    priority: Priority.high,
+  );
+
+  const NotificationDetails platformChannelSpecifics = NotificationDetails(
+    android: androidPlatformChannelSpecifics,
+  );
+
+  flutterLocalNotificationsPlugin.show(
+    0,
+    message.notification?.title,
+    message.notification?.body,
+    platformChannelSpecifics,
+    payload: 'item x',
+  );
 }
 
 Future<void> setOptimalDisplayMode() async {
@@ -148,7 +185,6 @@ Future<void> setOptimalDisplayMode() async {
       sameResolution.isNotEmpty ? sameResolution.first : active;
   await FlutterDisplayMode.setPreferredMode(mostOptimalMode);
 }
-
 
 Future<void> isarInit() async {
   isar = await Isar.open([
@@ -234,11 +270,15 @@ class _MyAppState extends State<MyApp> {
       amoledTheme = newAmoledTheme;
     });
   }
- void saveTokenToDatabase(String userId, [String? newToken]) async {
+
+  void saveTokenToDatabase(String userId, [String? newToken]) async {
     String? token = newToken ?? await FirebaseMessaging.instance.getToken();
 
     if (token != null) {
-      await firestore1.FirebaseFirestore.instance.collection('userTokens').doc(userId).set({
+      await firestore1.FirebaseFirestore.instance
+          .collection('userTokens')
+          .doc(userId)
+          .set({
         'token': token,
       });
     }
@@ -285,8 +325,6 @@ class _MyAppState extends State<MyApp> {
       locale = newLocale;
     });
   }
-  
-
 
   void changeWidgetBackgroundColor(String newWidgetBackgroundColor) {
     setState(() {
@@ -320,10 +358,14 @@ class _MyAppState extends State<MyApp> {
     _saveUserToken();
     FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
       _saveUserToken(newToken);
-  
+    });
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      _saveNotification(message); // Save the notification
+      _showNotification(message); // Display the notification
     });
   }
-    void _saveUserToken([String? newToken]) async {
+
+  void _saveUserToken([String? newToken]) async {
     // Get the currently signed-in user.
     User? user = FirebaseAuth.instance.currentUser;
 
@@ -345,7 +387,6 @@ class _MyAppState extends State<MyApp> {
       print('User is not logged in.');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

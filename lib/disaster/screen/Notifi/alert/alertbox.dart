@@ -47,29 +47,33 @@ class _AlertBoxState extends State<AlertBox> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        height: 120,
+        height: 100,
         width: MediaQuery.of(context).size.width - 32.0,
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
         decoration: BoxDecoration(
           color: const Color.fromARGB(82, 54, 51, 58),
           borderRadius: BorderRadius.circular(8.0),
-          border:  Border.all(color: const Color.fromARGB(255, 244, 63, 63), width: 0.4),
-          
+          border: Border.all(
+              color: const Color.fromARGB(255, 244, 63, 63), width: 0.4),
         ),
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 500),
           child: _notifications.isNotEmpty
               ? Padding(
                   padding: const EdgeInsets.all(8),
-                  child: Text(
-                    _notifications[_currentIndex],
+                  child: Column(
                     key: ValueKey<String>(_notifications[_currentIndex]),
-                    style: const TextStyle(
-                      color: Color.fromARGB(255, 244, 63, 63),
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Poppins',                      
-                      
-                    ),
+                    children: [
+                      Text(
+                        _notifications[_currentIndex],
+                        style: const TextStyle(
+                          color: Color.fromARGB(255, 244, 63, 63),
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Poppins',
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
                   ),
                 )
               : const SizedBox(), // Return empty SizedBox if there are no notifications
