@@ -13,17 +13,12 @@ class _AlertBoxState extends State<AlertBox> {
   late SharedPreferences _prefs;
   late Timer _timer;
   int _currentIndex = 0;
-  List<String> _notifications = [];
+  List<Map<String, String>> _notifications = [];
 
   @override
   void initState() {
     super.initState();
     _initSharedPreferences();
-    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
-      setState(() {
-        _currentIndex = (_currentIndex + 1) % _notifications.length;
-      });
-    });
   }
 
   @override
@@ -35,12 +30,31 @@ class _AlertBoxState extends State<AlertBox> {
   Future<void> _initSharedPreferences() async {
     _prefs = await SharedPreferences.getInstance();
     _loadNotifications();
+    _setupTimer();
   }
 
   Future<void> _loadNotifications() async {
+    List<String> notifications = _prefs.getStringList('notifications') ?? [];
+
     setState(() {
-      _notifications = _prefs.getStringList('notifications') ?? [];
+      _notifications = notifications.map((notification) {
+        List<String> parts = notification.split('::');
+        return {
+          'title': parts.isNotEmpty ? parts[0] : 'No Title',
+          'body': parts.length > 1 ? parts[1] : 'No Body',
+        };
+      }).toList();
     });
+  }
+
+  void _setupTimer() {
+    if (_notifications.isNotEmpty) {
+      _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+        setState(() {
+          _currentIndex = (_currentIndex + 1) % _notifications.length;
+        });
+      });
+    }
   }
 
   @override
@@ -49,34 +63,59 @@ class _AlertBoxState extends State<AlertBox> {
       child: Container(
         height: 100,
         width: MediaQuery.of(context).size.width - 32.0,
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
-          color: const Color.fromARGB(82, 54, 51, 58),
-          borderRadius: BorderRadius.circular(8.0),
+          color: Color(0xFFBBDEFB), // Brighter background for visibility
+          borderRadius: BorderRadius.circular(12.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2), // Soft shadow color
+              blurRadius: 10,
+              offset: const Offset(0, 4), // Slightly shifted downward
+            ),
+          ],
           border: Border.all(
               color: const Color.fromARGB(255, 244, 63, 63), width: 0.4),
         ),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 500),
-          child: _notifications.isNotEmpty
-              ? Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    key: ValueKey<String>(_notifications[_currentIndex]),
-                    children: [
-                      Text(
-                        _notifications[_currentIndex],
-                        style: const TextStyle(
-                          color: Color.fromARGB(255, 244, 63, 63),
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Poppins',
-                          fontSize: 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              : const SizedBox(), // Return empty SizedBox if there are no notifications
+        child: Row(
+          children: [
+            Icon(
+              Icons.notifications,
+              color: const Color.fromARGB(255, 244, 63, 63), // Alert icon color
+              size: 30,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                child: _notifications.isNotEmpty
+                    ? Column(
+                        key: ValueKey<int>(_currentIndex),
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _notifications[_currentIndex]['title'] ??
+                                'No Title',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _notifications[_currentIndex]['body'] ?? 'No Body',
+                            style: const TextStyle(
+                              color: Colors.black87,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      )
+                    : const SizedBox(), // Empty if no notifications
+              ),
+            ),
+          ],
         ),
       ),
     );
