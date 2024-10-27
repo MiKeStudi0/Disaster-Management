@@ -179,7 +179,7 @@ class _MapScreenState extends State<MapScreen> {
       '/maps/api/place/nearbysearch/json',
       {
         'location': '${_currentLocation!.latitude},${_currentLocation!.longitude}',
-        'radius': '5000', // 5 km radius
+        'radius': '10000', // 10 km radius
         'type': widget.keyword,
         'key': apiKey,
       },
@@ -298,7 +298,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Map Directions')),
+      appBar: AppBar(title: Text('${widget.keyword} Directions')),
       body: _currentLocation == null
           ? Center(child: CircularProgressIndicator())
           : GoogleMap(

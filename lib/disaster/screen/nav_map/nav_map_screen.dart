@@ -94,7 +94,7 @@ class _NavMapScreenState extends State<NavMapScreen> {
 
   Widget _buildRescueTeamList() {
     return SizedBox(
-      height: 430,
+      height: 350,
       child: ListView(
         scrollDirection: Axis.vertical,
         children: [
@@ -109,7 +109,7 @@ class _NavMapScreenState extends State<NavMapScreen> {
           ),
           _buildPoliceStationCard(), // Add police station block
           _buildHospitalCard(), // Add hospital block
-          _fireforcecard(), // Add fire force block
+          //_fireforcecard(), // Add fire force block
         ],
       ),
     );
