@@ -50,8 +50,7 @@ class _ChatscreenState extends State<Chatscreen> {
         _speech.listen(onResult: (result) {
           setState(() {
             _spokenText = result.recognizedWords;
-            userMessage.text =
-                _spokenText; // Set recognized text to input field
+            userMessage.text = _spokenText; // Set recognized text to input field
           });
         });
       }
@@ -72,41 +71,52 @@ class _ChatscreenState extends State<Chatscreen> {
             },
             icon: Icon(Icons.arrow_back_ios)),
       ),
-      backgroundColor: const Color(0xFFF2F2F2), // Light background color
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Expanded(
-                child: ListView.builder(
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                final message = _messages[index];
-                return Messages(
+              child: ListView.builder(
+                itemCount: _messages.length,
+                itemBuilder: (context, index) {
+                  final message = _messages[index];
+                  return Messages(
                     isUser: message.isUser,
                     date: DateFormat('HH:mm').format(message.date),
-                    message: message.message);
-              },
-            )),
+                    message: message.message,
+                  );
+                },
+              ),
+            ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15.0),
               child: Row(
                 children: [
                   Expanded(
                     flex: 15,
-                    child: TextFormField(
-                      controller: userMessage,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(55),
-                          borderSide: BorderSide.none,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 6,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: TextFormField(
+                        controller: userMessage,
+                        decoration: InputDecoration(
+                          filled: true,
+                          border: InputBorder.none,
+                          hintText: "Enter your query",
+                          hintStyle: TextStyle(color: Colors.grey),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 15.0),
                         ),
-                        label: const Text("Enter your query"),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 15.0),
                       ),
                     ),
                   ),
@@ -115,8 +125,7 @@ class _ChatscreenState extends State<Chatscreen> {
                     onTap: _listen,
                     child: Container(
                       decoration: BoxDecoration(
-                        color:
-                            _isListening ? Colors.redAccent : Colors.blueAccent,
+                        color: _isListening ? Colors.redAccent : Colors.blueAccent,
                         shape: BoxShape.circle,
                       ),
                       child: Padding(
@@ -160,11 +169,13 @@ class Messages extends StatelessWidget {
   final bool isUser;
   final String message;
   final String date;
-  const Messages(
-      {super.key,
-      required this.isUser,
-      required this.date,
-      required this.message});
+
+  const Messages({
+    super.key,
+    required this.isUser,
+    required this.date,
+    required this.message,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -176,21 +187,22 @@ class Messages extends StatelessWidget {
         right: isUser ? 10 : 80,
       ),
       decoration: BoxDecoration(
-          color: isUser ? Colors.blueAccent : Colors.grey.shade200,
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(15),
-            bottomLeft: isUser ? const Radius.circular(15) : Radius.zero,
-            topRight: const Radius.circular(15),
-            bottomRight: isUser ? Radius.zero : const Radius.circular(15),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              spreadRadius: 2,
-              offset: const Offset(0, 4),
-            )
-          ]),
+        color: isUser ? Colors.blueAccent : Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: const Radius.circular(15),
+          bottomLeft: isUser ? const Radius.circular(15) : Radius.zero,
+          topRight: const Radius.circular(15),
+          bottomRight: isUser ? Radius.zero : const Radius.circular(15),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            spreadRadius: 2,
+            offset: const Offset(0, 4),
+          )
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -217,5 +229,6 @@ class Message {
   final bool isUser;
   final String message;
   final DateTime date;
+
   Message({required this.isUser, required this.date, required this.message});
 }

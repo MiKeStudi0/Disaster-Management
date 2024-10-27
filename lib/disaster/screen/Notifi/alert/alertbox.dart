@@ -112,7 +112,14 @@ class _AlertBoxState extends State<AlertBox> {
                           ),
                         ],
                       )
-                    : const SizedBox(), // Empty if no notifications
+                    : const SizedBox(
+                      child: Text('No Notification Alert',
+                        style:  TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),), // Empty if no notifications
+                    ), // Empty if no notifications
               ),
             ),
           ],
