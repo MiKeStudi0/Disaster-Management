@@ -49,7 +49,7 @@ class _AlertBoxState extends State<AlertBox> {
 
   void _setupTimer() {
     if (_notifications.isNotEmpty) {
-      _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
         setState(() {
           _currentIndex = (_currentIndex + 1) % _notifications.length;
         });
@@ -84,30 +84,38 @@ class _AlertBoxState extends State<AlertBox> {
               color: const Color.fromARGB(255, 244, 63, 63), // Alert icon color
               size: 30,
             ),
-            const SizedBox(width: 10),
+            // const SizedBox(height: 30),
             Expanded(
               child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 500),
+                duration: const Duration(milliseconds: 800),
                 child: _notifications.isNotEmpty
                     ? Column(
                         key: ValueKey<int>(_currentIndex),
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            _notifications[_currentIndex]['title'] ??
-                                'No Title',
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                                      const SizedBox(height: 10),
+
+                          Center(
+                            child: Text(
+                              _notifications[_currentIndex]['title'] ??
+                                  'No Title',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                fontFamily: 'Roboto',
+                              ),
                             ),
                           ),
                           const SizedBox(height: 4),
-                          Text(
-                            _notifications[_currentIndex]['body'] ?? 'No Body',
-                            style: const TextStyle(
-                              color: Colors.black87,
-                              fontSize: 14,
+                          Center(
+                            child: Text(
+                              _notifications[_currentIndex]['body'] ?? 'No Body',
+                              style: const TextStyle(
+                                color: Colors.black87,
+                                fontSize: 14,
+                                fontFamily: 'Roboto',
+                              ),
                             ),
                           ),
                         ],

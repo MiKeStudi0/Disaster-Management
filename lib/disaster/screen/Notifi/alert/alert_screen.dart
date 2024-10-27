@@ -34,6 +34,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("Notifications: $_notifications");
     return Scaffold(
       appBar: AppBar(
         title: Text('Notifications'),
