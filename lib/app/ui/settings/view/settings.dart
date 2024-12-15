@@ -6,6 +6,8 @@ import 'package:disaster_management/disaster/screen/bar%20charts/Charts.dart';
 import 'package:disaster_management/disaster/screen/bar%20charts/admindemo.dart';
 import 'package:disaster_management/disaster/screen/bar%20charts/barchart.dart';
 import 'package:disaster_management/disaster/screen/bot/chatscreen.dart';
+import 'package:disaster_management/disaster/screen/google_map/directionmap.dart';
+import 'package:disaster_management/disaster/screen/google_map/updatelocation.dart';
 import 'package:disaster_management/disaster/screen/login&signup/signup.dart';
 import 'package:disaster_management/disaster/screen/sos_screen/alert_sos.dart';
 import 'package:disaster_management/disaster/screen/volunteer/volunteer_list.dart';
@@ -17,6 +19,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
@@ -44,6 +47,7 @@ class _SettingsPageState extends State<SettingsPage> {
   String? appVersion;
   String? colorBackground;
   String? colorText;
+  LatLng destinationdummy = LatLng(11.258753, 75.780411);
 
   Future<void> infoVersion() async {
     final packageInfo = await PackageInfo.fromPlatform();
@@ -986,6 +990,31 @@ class _SettingsPageState extends State<SettingsPage> {
                                       ],
                                     ),
                                   ),
+                                ),
+                                SettingCard(
+                                  icon: const Icon(Icons.arrow_outward_rounded),
+                                  text: 'Direction',
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                MapDirectionPage(
+                                                  destination: destinationdummy,
+                                                )));
+                                  },
+                                ),
+                                SettingCard(
+                                  icon:
+                                      const Icon(Icons.arrow_circle_up_rounded),
+                                  text: 'Share your location',
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                LocationTrackingPage()));
+                                  },
                                 ),
                                 const Gap(10),
                               ],

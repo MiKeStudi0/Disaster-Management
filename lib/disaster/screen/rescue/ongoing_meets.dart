@@ -39,7 +39,6 @@ class _OngoingScreenState extends State<OngoingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-    
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -47,24 +46,24 @@ class _OngoingScreenState extends State<OngoingScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildSectionTitle('Rescue Teams Nearby'),
-               Divider(
-          color: Colors.grey[400],
-          thickness: 1,
-          endIndent: 10,
-        ),
+              Divider(
+                color: Colors.grey[400],
+                thickness: 1,
+                endIndent: 10,
+              ),
               _buildRescueTeamList(),
-                           _buildSectionTitle('Helpline Numbers'),
-                            Divider(
-          color: Colors.grey[400],
-          thickness: 1,
-          endIndent: 10,
-        ),
+              _buildSectionTitle('Helpline Numbers'),
+              Divider(
+                color: Colors.grey[400],
+                thickness: 1,
+                endIndent: 10,
+              ),
               _buildHelplineNumbers(),
-               Divider(
-          color: Colors.grey[400],
-          thickness: 1,
-          endIndent: 10,
-        ),
+              Divider(
+                color: Colors.grey[400],
+                thickness: 1,
+                endIndent: 10,
+              ),
               _buildSectionTitle('Important Information'),
               _buildStaticInformation(),
               const SizedBox(height: 24),
@@ -158,7 +157,6 @@ class _OngoingScreenState extends State<OngoingScreen> {
     );
   }
 
-
   Widget _buildHelplineNumbers() {
     // Determine how many items to display
     int displayCount = _isExpanded ? _helplineNumbers.length : 3;
@@ -167,7 +165,8 @@ class _OngoingScreenState extends State<OngoingScreen> {
       children: [
         ..._helplineNumbers
             .take(displayCount)
-            .map((entry) => _buildHelplineCard(entry['department']!, entry['number']!))
+            .map((entry) =>
+                _buildHelplineCard(entry['department']!, entry['number']!))
             .toList(),
         const SizedBox(height: 8),
         TextButton(
@@ -215,15 +214,15 @@ class _OngoingScreenState extends State<OngoingScreen> {
   }
 
   Widget _buildStaticInformation() {
-    return   SettingCard(
-                elevation: 4,
-                icon: const Icon(LineAwesomeIcons.book_dead_solid),
-                text: 'Awareness',
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => StaticdataScreen()));
-                },
-              );
+    return SettingCard(
+      elevation: 4,
+      icon: const Icon(LineAwesomeIcons.book_dead_solid),
+      text: 'Awareness',
+      onPressed: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => StaticdataScreen()));
+      },
+    );
   }
 
   Widget _buildRescueTeamCard(String teamName, String location, String area) {
@@ -270,17 +269,18 @@ class _OngoingScreenState extends State<OngoingScreen> {
           children: [
             const Icon(Icons.location_on, color: Colors.grey),
             const SizedBox(width: 4),
-            Text(location, style: const TextStyle(fontSize: 14.0, color: Colors.white)),
+            Text(location,
+                style: const TextStyle(fontSize: 14.0, color: Colors.white)),
             const SizedBox(width: 8),
             const Icon(Icons.track_changes_outlined, color: Colors.grey),
             const SizedBox(width: 4),
-            Text(area, style: const TextStyle(fontSize: 14.0, color: Colors.white)),
+            Text(area,
+                style: const TextStyle(fontSize: 14.0, color: Colors.white)),
           ],
         ),
       ],
     );
   }
-
 
   Future<void> _makePhoneCall(String number) async {
     final Uri phoneUri = Uri(scheme: 'tel', path: number);
@@ -332,8 +332,7 @@ class _OngoingScreenState extends State<OngoingScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => VideoConferencePage(
-              conferenceID: '1234$index'),
+          builder: (context) => VideoConferencePage(conferenceID: '12345'),
         ),
       );
     } else {
