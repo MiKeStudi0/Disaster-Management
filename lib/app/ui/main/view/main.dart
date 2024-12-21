@@ -30,12 +30,12 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ShakeLocationPage(),
-            ),
-          );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => ShakeLocationPage(),
+          //   ),
+          // );
         },
         child: const Icon(Icons.crisis_alert_sharp),
         backgroundColor: Colors.red,
