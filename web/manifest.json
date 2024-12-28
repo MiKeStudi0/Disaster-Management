@@ -1,6 +1,6 @@
 {
-    "name": "rain",
-    "short_name": "rain",
+    "name": "drm_admin",
+    "short_name": "drm_admin",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

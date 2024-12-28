@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "rain" "\0"
+            VALUE "CompanyName", "com.example.disaster_management" "\0"
+            VALUE "FileDescription", "drm_admin" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "rain" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "rain.exe" "\0"
-            VALUE "ProductName", "rain" "\0"
+            VALUE "InternalName", "drm_admin" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2024 com.example.disaster_management. All rights reserved." "\0"
+            VALUE "OriginalFilename", "drm_admin.exe" "\0"
+            VALUE "ProductName", "drm_admin" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

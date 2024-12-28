@@ -59,25 +59,23 @@ class _NavMapScreenState extends State<NavMapScreen> {
                       MaterialPageRoute(builder: (context) => VolunteerList()));
                 },
               ),
-             
-             
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => ShakeLocationPage(),
-          //   ),
-          // );
-        },
-        child: const Icon(Icons.crisis_alert_sharp),
-        backgroundColor: Colors.red,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     // Navigator.push(
+      //     //   context,
+      //     //   MaterialPageRoute(
+      //     //     builder: (context) => ShakeLocationPage(),
+      //     //   ),
+      //     // );
+      //   },
+      //   child: const Icon(Icons.crisis_alert_sharp),
+      //   backgroundColor: Colors.red,
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
@@ -206,6 +204,7 @@ class _NavMapScreenState extends State<NavMapScreen> {
       },
     );
   }
+
   Widget _fireforcecard() {
     return SettingCard(
       elevation: 4,
@@ -221,7 +220,4 @@ class _NavMapScreenState extends State<NavMapScreen> {
       },
     );
   }
-
-
-
 }

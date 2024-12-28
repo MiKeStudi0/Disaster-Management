@@ -1,4 +1,3 @@
-const appId = 1400497077;
-const appSign =
-    "e5de615f0061992ed260e794999baf07d12a6f809093fa309e8a1ade91391582";
-const map = 'AIzaSyBJMhMpJEZEN2fubae-mdIZ-vCEXOAkHMk';
+const appId = 734434983;
+const appSign = "486a10fb6164df3857f3d4e748204a71fa802608551940a9ff6460c2e6602dbf";
+const map ='AIzaSyBJMhMpJEZEN2fubae-mdIZ-vCEXOAkHMk';

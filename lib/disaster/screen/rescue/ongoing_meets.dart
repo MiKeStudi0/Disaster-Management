@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:disaster_management/app/ui/settings/widgets/setting_card.dart';
 import 'package:disaster_management/disaster/screen/google_map/google_map.dart';
 import 'package:disaster_management/disaster/screen/rescue/vedioconf.dart';
+import 'package:disaster_management/disaster/screen/sos_screen/alert_shake.dart';
 import 'package:disaster_management/disaster/screen/sos_screen/alert_sos.dart';
 import 'package:disaster_management/disaster/screen/static/static_awarness.dart';
 import 'package:flutter/material.dart';
@@ -95,12 +96,12 @@ class _OngoingScreenState extends State<OngoingScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => ShakeLocationPage(),
-          //   ),
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ShakeLocationPage(),
+            ),
+          );
         },
         child: const Icon(Icons.crisis_alert_sharp),
         backgroundColor: Colors.red,
@@ -329,12 +330,12 @@ class _OngoingScreenState extends State<OngoingScreen> {
 
   void _codeConfirm(String enteredCode, BuildContext context, int index) {
     if (enteredCode == '1234') {
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => VideoConferencePage(conferenceID: '12345'),
-      //   ),
-      // );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VideoConferencePage(conferenceID: '12345'),
+        ),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Incorrect code')),
