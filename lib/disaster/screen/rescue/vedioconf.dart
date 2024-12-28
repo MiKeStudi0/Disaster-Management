@@ -1,8 +1,10 @@
 import 'package:disaster_management/disaster/screen/rescue/const.dart';
 import 'package:flutter/material.dart';
 import 'package:zego_uikit_prebuilt_video_conference/zego_uikit_prebuilt_video_conference.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class VideoConferencePage extends StatelessWidget {
+class VideoConferencePage extends StatefulWidget {
   final String conferenceID;
 
   const VideoConferencePage({
@@ -11,24 +13,62 @@ class VideoConferencePage extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    // Replace these with dynamic values or actual user data in a real application
-    final String userID = '1234567752';
-    final String username = 'Soorya';
+  _VideoConferencePageState createState() => _VideoConferencePageState();
+}
 
-    // ZEGOCLOUD app credentials (replace with actual appID and appSign)
+class _VideoConferencePageState extends State<VideoConferencePage> {
+  String? userID;
+  String? username;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    try {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser != null) {
+        setState(() {
+          userID = currentUser.uid;
+        });
+
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUser.uid)
+            .get();
+
+        if (userDoc.exists) {
+          setState(() {
+            username = userDoc['name'];
+          });
+        }
+      }
+    } catch (e) {
+      print('Error fetching user data: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     const int appID = appId;
     const String appsign = appSign;
 
     return Scaffold(
       body: SafeArea(
-        child: ZegoUIKitPrebuiltVideoConference(
+        child: userID != null && username != null
+            ? ZegoUIKitPrebuiltVideoConference(
           appID: appID,
           appSign: appsign,
-          userID: userID,
-          userName: username,
-          conferenceID: conferenceID,
+          userID: userID!,
+          userName: username!,
+          conferenceID: widget.conferenceID,
           config: ZegoUIKitPrebuiltVideoConferenceConfig(),
+        )
+            : Center(
+          child: CircularProgressIndicator(),
         ),
       ),
     );
