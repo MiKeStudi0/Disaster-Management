@@ -149,7 +149,7 @@ class _SignupPageState extends State<SignupPage> {
                     fontFamily: 'Poppins',
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 113, 109, 113)),
+                      color: Color.fromARGB(255, 251, 251, 251)),
                 ),
               ),
               const SizedBox(
@@ -174,7 +174,7 @@ class _SignupPageState extends State<SignupPage> {
                           style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                              color: Color.fromARGB(255, 118, 118, 118)),
                         ),
                         const SizedBox(height: 20),
                         _buildTextField(_nameController, 'Name', Icons.person),

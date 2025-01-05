@@ -11,6 +11,8 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+    bool _isPasswordVisible = false; // Move this variable to the class level
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -142,10 +144,8 @@ class _SignInPageState extends State<SignInPage> {
       validator: (value) => value!.isEmpty ? 'Enter $label' : null,
     );
   }
-
-  TextFormField _buildPasswordField() {
+TextFormField _buildPasswordField() {
     final colorScheme = Theme.of(context).colorScheme;
-    bool _isPasswordVisible = false;
 
     return TextFormField(
       controller: _passwordController,
@@ -175,5 +175,4 @@ class _SignInPageState extends State<SignInPage> {
       ),
       validator: (value) => value!.length < 6 ? 'Password too short' : null,
     );
-  }
-}
+  }}
