@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationsPage extends StatefulWidget {
+  const NotificationsPage({super.key});
+
   @override
   _NotificationsPageState createState() => _NotificationsPageState();
 }
@@ -49,22 +51,22 @@ class _NotificationsPageState extends State<NotificationsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications'),
+        title: const Text('Notifications'),
       ),
       body: _notifications.isEmpty
-          ? Center(child: Text('No Notifications Available'))
+          ? const Center(child: Text('No Notifications Available'))
           : ListView.builder(
               itemCount: _notifications.length,
               itemBuilder: (context, index) {
                 return Card(
-                  margin: EdgeInsets.all(8.0),
+                  margin: const EdgeInsets.all(8.0),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Leading bell icon
-                        Icon(
+                        const Icon(
                           Icons.notifications,
                           color: Colors.redAccent,
                           size: 30,
@@ -78,7 +80,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                             children: [
                               Text(
                                 _notifications[index]['title'] ?? 'No Title',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
                                 ),
@@ -91,7 +93,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                   width: double.infinity,
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) {
-                                    return Icon(Icons.broken_image,
+                                    return const Icon(Icons.broken_image,
                                         color: Colors.grey); // Fallback icon
                                   },
                                 ),

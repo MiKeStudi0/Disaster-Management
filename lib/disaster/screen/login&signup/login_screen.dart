@@ -6,6 +6,8 @@ import 'package:disaster_management/app/ui/geolocation.dart';
 import 'package:lottie/lottie.dart';
 
 class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
+
   @override
   _SignInPageState createState() => _SignInPageState();
 }
@@ -94,7 +96,6 @@ class _SignInPageState extends State<SignInPage> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: _signIn,
-                            child: const Text('Sign In'),
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
@@ -103,12 +104,13 @@ class _SignInPageState extends State<SignInPage> {
                               elevation: 5,
                               shadowColor: colorScheme.primary.withOpacity(0.5),
                             ),
+                            child: const Text('Sign In'),
                           ),
                         ),
                         const SizedBox(height: 10),
                         TextButton(
                           onPressed: () {
-                            Get.to(() => SignupPage(), transition: Transition.rightToLeft);
+                            Get.to(() => const SignupPage(), transition: Transition.rightToLeft);
                           },
                           child: const Text('Don’t have an account? Sign up'),
                         ),
@@ -131,10 +133,10 @@ class _SignInPageState extends State<SignInPage> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon, color: colorScheme.onBackground),
+        prefixIcon: Icon(icon, color: colorScheme.onSurface),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: colorScheme.onBackground),
+          borderSide: BorderSide(color: colorScheme.onSurface),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -152,10 +154,10 @@ TextFormField _buildPasswordField() {
       obscureText: !_isPasswordVisible,
       decoration: InputDecoration(
         labelText: 'Password',
-        prefixIcon: Icon(Icons.lock, color: colorScheme.onBackground),
+        prefixIcon: Icon(Icons.lock, color: colorScheme.onSurface),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: colorScheme.onBackground),
+          borderSide: BorderSide(color: colorScheme.onSurface),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

@@ -1,9 +1,7 @@
 import 'package:disaster_management/disaster/screen/Notifi/alert/alert_screen.dart';
 import 'package:disaster_management/disaster/screen/Notifi/alert/alertbox.dart';
 import 'package:disaster_management/disaster/screen/sos_screen/alert_shake.dart';
-import 'package:disaster_management/disaster/screen/sos_screen/alert_sos.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:disaster_management/app/controller/controller.dart';
 import 'package:disaster_management/app/data/db.dart';
@@ -34,12 +32,12 @@ class _MainPageState extends State<MainPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ShakeLocationPage(),
+              builder: (context) => const ShakeLocationPage(),
             ),
           );
         },
-        child: const Icon(Icons.crisis_alert_sharp),
         backgroundColor: Colors.red,
+        child: const Icon(Icons.crisis_alert_sharp),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: RefreshIndicator(
@@ -99,16 +97,16 @@ class _MainPageState extends State<MainPage> {
                   tempMin: tempMin!,
                 ),
                 GestureDetector(
-                  child: AlertBox(),
+                  child: const AlertBox(),
                   onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => NotificationsPage(),
+                          builder: (context) => const NotificationsPage(),
                         ));
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 Card(

@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class AdminPage extends StatefulWidget {
+  const AdminPage({super.key});
+
   @override
   _AdminPageState createState() => _AdminPageState();
 }
@@ -32,13 +34,13 @@ class _AdminPageState extends State<AdminPage> {
       'available': double.parse(clothesAvailableController.text),
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Data successfully uploaded')));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data successfully uploaded')));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Admin Page")),
+      appBar: AppBar(title: const Text("Admin Page")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -46,45 +48,45 @@ class _AdminPageState extends State<AdminPage> {
             // Food Input
             TextField(
               controller: foodNeededController,
-              decoration: InputDecoration(labelText: "Food Needed"),
+              decoration: const InputDecoration(labelText: "Food Needed"),
               keyboardType: TextInputType.number,
             ),
             TextField(
               controller: foodAvailableController,
-              decoration: InputDecoration(labelText: "Food Available"),
+              decoration: const InputDecoration(labelText: "Food Available"),
               keyboardType: TextInputType.number,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Water Input
             TextField(
               controller: waterNeededController,
-              decoration: InputDecoration(labelText: "Water Needed"),
+              decoration: const InputDecoration(labelText: "Water Needed"),
               keyboardType: TextInputType.number,
             ),
             TextField(
               controller: waterAvailableController,
-              decoration: InputDecoration(labelText: "Water Available"),
+              decoration: const InputDecoration(labelText: "Water Available"),
               keyboardType: TextInputType.number,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Clothes Input
             TextField(
               controller: clothesNeededController,
-              decoration: InputDecoration(labelText: "Clothes Needed"),
+              decoration: const InputDecoration(labelText: "Clothes Needed"),
               keyboardType: TextInputType.number,
             ),
             TextField(
               controller: clothesAvailableController,
-              decoration: InputDecoration(labelText: "Clothes Available"),
+              decoration: const InputDecoration(labelText: "Clothes Available"),
               keyboardType: TextInputType.number,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             ElevatedButton(
               onPressed: pushDataToFirebase,
-              child: Text("Submit Data"),
+              child: const Text("Submit Data"),
             ),
           ],
         ),

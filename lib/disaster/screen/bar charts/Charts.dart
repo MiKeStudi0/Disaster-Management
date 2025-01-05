@@ -4,10 +4,12 @@ import 'package:disaster_management/disaster/screen/bar%20charts/piechart.dart';
 import 'package:flutter/material.dart';
 
 class Charts extends StatelessWidget {
+  const Charts({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(" Charts ")),
+      appBar: AppBar(title: const Text(" Charts ")),
       body: ListView(
         children:  const [
           ResourceManagementChart(),

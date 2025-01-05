@@ -116,20 +116,24 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-void main() => runApp(ChatApp());
+void main() => runApp(const ChatApp());
 
 class ChatApp extends StatelessWidget {
+  const ChatApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Gemini AI Chat',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: ChatWidget(),
+      home: const ChatWidget(),
     );
   }
 }
 
 class ChatWidget extends StatefulWidget {
+  const ChatWidget({super.key});
+
   @override
   _ChatWidgetState createState() => _ChatWidgetState();
 }
@@ -176,7 +180,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat with Gemini AI'),
+        title: const Text('Chat with Gemini AI'),
       ),
       body: Column(
         children: [
@@ -192,8 +196,8 @@ class _ChatWidgetState extends State<ChatWidget> {
             ),
           ),
           if (isLoading)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: CircularProgressIndicator(),
             ),
           Padding(
@@ -203,13 +207,13 @@ class _ChatWidgetState extends State<ChatWidget> {
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Enter your message',
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send),
+                  icon: const Icon(Icons.send),
                   onPressed: () {
                     final message = _controller.text;
                     if (message.isNotEmpty) {

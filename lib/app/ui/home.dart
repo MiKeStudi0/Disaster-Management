@@ -13,7 +13,6 @@ import 'package:disaster_management/app/ui/places/view/place_list.dart';
 import 'package:disaster_management/app/ui/places/widgets/create_place.dart';
 import 'package:disaster_management/app/ui/geolocation.dart';
 import 'package:disaster_management/app/ui/main/view/main.dart';
-import 'package:disaster_management/app/ui/map/view/map.dart';
 import 'package:disaster_management/app/ui/settings/view/settings.dart';
 import 'package:disaster_management/app/utils/show_snack_bar.dart';
 import 'package:disaster_management/main.dart';
@@ -36,7 +35,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     const MainPage(),
     const PlaceList(),
     if (!settings.hideMap) const NavMapScreen(),
-    OngoingScreen(),
+    const OngoingScreen(),
     const SettingsPage(),
   ];
 

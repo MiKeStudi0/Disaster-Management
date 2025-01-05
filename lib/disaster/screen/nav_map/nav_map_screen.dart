@@ -1,13 +1,8 @@
 import 'package:disaster_management/app/ui/settings/widgets/setting_card.dart';
 import 'package:disaster_management/disaster/screen/google_map/google_map.dart';
-import 'package:disaster_management/disaster/screen/sos_screen/alert_sos.dart';
-import 'package:disaster_management/disaster/screen/static/static_awarness.dart';
 import 'package:disaster_management/disaster/screen/volunteer/volunteer_list.dart';
 import 'package:disaster_management/disaster/screen/volunteer/volunteer_reg.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
-import 'package:get/get.dart';
-import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class NavMapScreen extends StatefulWidget {
@@ -47,7 +42,7 @@ class _NavMapScreenState extends State<NavMapScreen> {
                 text: 'Volunteer Registration',
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => VolunteerReg()));
+                      MaterialPageRoute(builder: (context) => const VolunteerReg()));
                 },
               ),
               SettingCard(
@@ -119,7 +114,7 @@ class _NavMapScreenState extends State<NavMapScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MapScreen(),
+            builder: (context) => const MapScreen(),
           ),
         );
       },
@@ -182,7 +177,7 @@ class _NavMapScreenState extends State<NavMapScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MapScreen(keyword: 'police'),
+            builder: (context) => const MapScreen(keyword: 'police'),
           ),
         );
       },
@@ -198,7 +193,7 @@ class _NavMapScreenState extends State<NavMapScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MapScreen(keyword: 'hospital'),
+            builder: (context) => const MapScreen(keyword: 'hospital'),
           ),
         );
       },
@@ -214,7 +209,7 @@ class _NavMapScreenState extends State<NavMapScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MapScreen(keyword: 'firestation'),
+            builder: (context) => const MapScreen(keyword: 'firestation'),
           ),
         );
       },

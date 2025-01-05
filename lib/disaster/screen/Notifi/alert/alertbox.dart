@@ -65,7 +65,7 @@ class _AlertBoxState extends State<AlertBox> {
         width: MediaQuery.of(context).size.width - 32.0,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
-          color: Color(0xFFBBDEFB), // Brighter background for visibility
+          color: const Color(0xFFBBDEFB), // Brighter background for visibility
           borderRadius: BorderRadius.circular(12.0),
           boxShadow: [
             BoxShadow(
@@ -79,9 +79,9 @@ class _AlertBoxState extends State<AlertBox> {
         ),
         child: Row(
           children: [
-            Icon(
+            const Icon(
               Icons.notifications,
-              color: const Color.fromARGB(255, 244, 63, 63), // Alert icon color
+              color: Color.fromARGB(255, 244, 63, 63), // Alert icon color
               size: 30,
             ),
             // const SizedBox(height: 30),

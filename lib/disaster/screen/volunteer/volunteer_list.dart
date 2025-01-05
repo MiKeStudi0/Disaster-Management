@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class VolunteerList extends StatelessWidget {
-  VolunteerList({Key? key}) : super(key: key) {
+  VolunteerList({super.key}) {
     _stream = _reference.snapshots();
   }
 
@@ -77,7 +77,7 @@ class VolunteerList extends StatelessWidget {
 class VolunteerCard extends StatelessWidget {
   final Map volunteerData;
 
-  VolunteerCard(this.volunteerData, {Key? key}) : super(key: key);
+  const VolunteerCard(this.volunteerData, {super.key});
 
   @override
   Widget build(BuildContext context) {

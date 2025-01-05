@@ -8,9 +8,9 @@ class VideoConferencePage extends StatefulWidget {
   final String conferenceID;
 
   const VideoConferencePage({
-    Key? key,
+    super.key,
     required this.conferenceID,
-  }) : super(key: key);
+  });
 
   @override
   _VideoConferencePageState createState() => _VideoConferencePageState();
@@ -67,7 +67,7 @@ class _VideoConferencePageState extends State<VideoConferencePage> {
           conferenceID: widget.conferenceID,
           config: ZegoUIKitPrebuiltVideoConferenceConfig(),
         )
-            : Center(
+            : const Center(
           child: CircularProgressIndicator(),
         ),
       ),

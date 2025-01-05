@@ -4,7 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppNotificationsScreen extends StatefulWidget {
-  const AppNotificationsScreen({Key? key}) : super(key: key);
+  const AppNotificationsScreen({super.key});
 
   @override
   _AppNotificationsScreenState createState() => _AppNotificationsScreenState();

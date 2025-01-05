@@ -1,9 +1,7 @@
-import 'dart:ui';
 import 'package:disaster_management/app/ui/settings/widgets/setting_card.dart';
 import 'package:disaster_management/disaster/screen/google_map/google_map.dart';
 import 'package:disaster_management/disaster/screen/rescue/vedioconf.dart';
 import 'package:disaster_management/disaster/screen/sos_screen/alert_shake.dart';
-import 'package:disaster_management/disaster/screen/sos_screen/alert_sos.dart';
 import 'package:disaster_management/disaster/screen/static/static_awarness.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -74,7 +72,7 @@ class _OngoingScreenState extends State<OngoingScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MapScreen(),
+                        builder: (context) => const MapScreen(),
                       ),
                     );
                   },
@@ -99,12 +97,12 @@ class _OngoingScreenState extends State<OngoingScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ShakeLocationPage(),
+              builder: (context) => const ShakeLocationPage(),
             ),
           );
         },
-        child: const Icon(Icons.crisis_alert_sharp),
         backgroundColor: Colors.red,
+        child: const Icon(Icons.crisis_alert_sharp),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
@@ -168,7 +166,7 @@ class _OngoingScreenState extends State<OngoingScreen> {
             .take(displayCount)
             .map((entry) =>
                 _buildHelplineCard(entry['department']!, entry['number']!))
-            .toList(),
+            ,
         const SizedBox(height: 8),
         TextButton(
           onPressed: () {
@@ -221,7 +219,7 @@ class _OngoingScreenState extends State<OngoingScreen> {
       text: 'Awareness',
       onPressed: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => StaticdataScreen()));
+            MaterialPageRoute(builder: (context) => const StaticdataScreen()));
       },
     );
   }
@@ -333,7 +331,7 @@ class _OngoingScreenState extends State<OngoingScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => VideoConferencePage(conferenceID: '12345'),
+          builder: (context) => const VideoConferencePage(conferenceID: '12345'),
         ),
       );
     } else {

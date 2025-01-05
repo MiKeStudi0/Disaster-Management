@@ -1,15 +1,11 @@
 import 'dart:io';
 import 'package:dio_cache_interceptor_file_store/dio_cache_interceptor_file_store.dart';
 import 'package:disaster_management/disaster/screen/Notifi/alert/alert_screen.dart';
-import 'package:disaster_management/disaster/screen/Notifi/alert/notification_screen.dart';
 import 'package:disaster_management/disaster/screen/bar%20charts/Charts.dart';
-import 'package:disaster_management/disaster/screen/bar%20charts/admindemo.dart';
-import 'package:disaster_management/disaster/screen/bar%20charts/barchart.dart';
 import 'package:disaster_management/disaster/screen/bot/chatscreen.dart';
 import 'package:disaster_management/disaster/screen/google_map/directionmap.dart';
 import 'package:disaster_management/disaster/screen/google_map/updatelocation.dart';
 import 'package:disaster_management/disaster/screen/login&signup/signup.dart';
-import 'package:disaster_management/disaster/screen/sos_screen/alert_sos.dart';
 import 'package:disaster_management/disaster/screen/volunteer/volunteer_list.dart';
 import 'package:disaster_management/disaster/screen/volunteer/volunteer_reg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -47,7 +43,7 @@ class _SettingsPageState extends State<SettingsPage> {
   String? appVersion;
   String? colorBackground;
   String? colorText;
-  LatLng destinationdummy = LatLng(11.258753, 75.780411);
+  LatLng destinationdummy = const LatLng(11.258753, 75.780411);
 
   Future<void> infoVersion() async {
     final packageInfo = await PackageInfo.fromPlatform();
@@ -77,15 +73,15 @@ class _SettingsPageState extends State<SettingsPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => Chatscreen(),
+              builder: (context) => const Chatscreen(),
             ),
           );
         },
-        child: Icon(
+        backgroundColor: Colors.blueGrey,
+        child: const Icon(
           Icons.chat_bubble,
           color: Colors.white,
         ),
-        backgroundColor: Colors.blueGrey,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: SingleChildScrollView(
@@ -1013,7 +1009,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                LocationTrackingPage()));
+                                                const LocationTrackingPage()));
                                   },
                                 ),
                                 const Gap(10),
@@ -1263,7 +1259,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                VolunteerReg()));
+                                                const VolunteerReg()));
                                   },
                                 ),
                                 SettingCard(
@@ -1295,7 +1291,7 @@ class _SettingsPageState extends State<SettingsPage> {
               text: 'version'.tr,
               onPressed: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Charts()));
+                    context, MaterialPageRoute(builder: (context) => const Charts()));
               },
               info: true,
               infoWidget: _TextInfo(
@@ -1309,7 +1305,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => NotificationsPage(),
+                      builder: (context) => const NotificationsPage(),
                     ));
               },
             ),
@@ -1319,7 +1315,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onPressed: () async {
                 await FirebaseAuth.instance.signOut();
                 // Navigate back to the Signup page after logging out
-                Get.off(() => SignupPage(), transition: Transition.rightToLeft);
+                Get.off(() => const SignupPage(), transition: Transition.rightToLeft);
               },
             ),
             Padding(

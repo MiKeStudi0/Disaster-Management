@@ -1,6 +1,5 @@
 import 'package:disaster_management/disaster/screen/rescue/const.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:intl/intl.dart';
@@ -65,12 +64,12 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Chat with me"),
+        title: const Text("Chat with me"),
         leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: Icon(Icons.arrow_back_ios)),
+            icon: const Icon(Icons.arrow_back_ios)),
       ),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
@@ -79,7 +78,7 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
           children: [
             Expanded(
               child: ListView.builder(
-                physics: BouncingScrollPhysics(), // Smooth scrolling
+                physics: const BouncingScrollPhysics(), // Smooth scrolling
                 itemCount: _messages.length,
                 itemBuilder: (context, index) {
                   final message = _messages[index];
@@ -97,7 +96,7 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(30),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.black26,
                             blurRadius: 6,
@@ -107,12 +106,12 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
                       ),
                       child: TextFormField(
                         controller: userMessage,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           filled: true,
                           border: InputBorder.none,
                           hintText: "Enter your query",
                           hintStyle: TextStyle(color: Colors.grey),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+                          contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
                         ),
                       ),
                     ),
@@ -138,7 +137,7 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
                   ),
                   const SizedBox(width: 8),
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.blueAccent,
                       shape: BoxShape.circle,
                     ),
@@ -148,7 +147,7 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
                       onPressed: () {
                         sendMessage();
                       },
-                      icon: Icon(IconsaxPlusLinear.arrow_circle_right, color: Colors.white),
+                      icon: const Icon(IconsaxPlusLinear.arrow_circle_right, color: Colors.white),
                     ),
                   ),
                 ],
@@ -162,7 +161,7 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
 
   Widget _buildMessageBubble(Message message) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 300), // Smooth transition
+      duration: const Duration(milliseconds: 300), // Smooth transition
       padding: const EdgeInsets.all(15),
       margin: const EdgeInsets.symmetric(vertical: 10).copyWith(
         left: message.isUser ? 80 : 10,

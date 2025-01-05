@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 class MapDirectionPage extends StatefulWidget {
   final LatLng destination;
 
-  MapDirectionPage({required this.destination});
+  const MapDirectionPage({super.key, required this.destination});
 
   @override
   _MapDirectionPageState createState() => _MapDirectionPageState();
@@ -17,7 +17,7 @@ class MapDirectionPage extends StatefulWidget {
 
 class _MapDirectionPageState extends State<MapDirectionPage> {
   late GoogleMapController _mapController;
-  LatLng _currentPosition = LatLng(0, 0); // Initial dummy position
+  LatLng _currentPosition = const LatLng(0, 0); // Initial dummy position
   List<LatLng> _polylineCoordinates = [];
   Set<Polyline> _polylines = {};
   String? _nextInstruction;
@@ -53,7 +53,7 @@ class _MapDirectionPageState extends State<MapDirectionPage> {
   /// Continuously updates the user's location in real-time.
   void _startLocationUpdates() {
     Geolocator.getPositionStream(
-      locationSettings: LocationSettings(
+      locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
         distanceFilter: 10, // Minimum distance to trigger update
       ),
@@ -94,7 +94,7 @@ class _MapDirectionPageState extends State<MapDirectionPage> {
 
           _polylines = {
             Polyline(
-              polylineId: PolylineId("route"),
+              polylineId: const PolylineId("route"),
               points: _polylineCoordinates,
               color: Colors.blue,
               width: 5,
@@ -142,12 +142,12 @@ class _MapDirectionPageState extends State<MapDirectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Navigation")),
+      appBar: AppBar(title: const Text("Navigation")),
       body: Stack(
         children: [
           GoogleMap(
             initialCameraPosition:
-                CameraPosition(target: LatLng(0, 0), zoom: 13),
+                const CameraPosition(target: LatLng(0, 0), zoom: 13),
             onMapCreated: (controller) => _mapController = controller,
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
@@ -158,15 +158,15 @@ class _MapDirectionPageState extends State<MapDirectionPage> {
             left: 20,
             right: 20,
             child: Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
-                boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 10)],
+                boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 10)],
               ),
               child: Text(
                 _nextInstruction ?? "Fetching directions...",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
             ),

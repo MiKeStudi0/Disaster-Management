@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:disaster_management/app/ui/geolocation.dart';
 
 class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
+
   @override
   _SignupPageState createState() => _SignupPageState();
 }
@@ -198,7 +200,6 @@ class _SignupPageState extends State<SignupPage> {
                                 width: double.infinity,
                                 child: ElevatedButton(
                                   onPressed: _signUp,
-                                  child: const Text('Sign Up'),
                                   style: ElevatedButton.styleFrom(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 16),
@@ -209,12 +210,13 @@ class _SignupPageState extends State<SignupPage> {
                                     shadowColor:
                                         colorScheme.primary.withOpacity(0.5),
                                   ),
+                                  child: const Text('Sign Up'),
                                 ),
                               ),
                         const SizedBox(height: 10),
                         TextButton(
                           onPressed: () {
-                            Get.to(() => SignInPage(),
+                            Get.to(() => const SignInPage(),
                                 transition: Transition.rightToLeft);
                           },
                           child: const Text(

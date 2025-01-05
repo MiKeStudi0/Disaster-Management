@@ -131,8 +131,8 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   late GoogleMapController _mapController;
   LatLng? _currentLocation;
-  Set<Polyline> _polylines = {};
-  Set<Marker> _markers = {};
+  final Set<Polyline> _polylines = {};
+  final Set<Marker> _markers = {};
 
   @override
   void initState() {
@@ -173,7 +173,7 @@ class _MapScreenState extends State<MapScreen> {
     if (_currentLocation == null) return;
 
     print('Fetching ${widget.keyword} near $_currentLocation');
-    final apiKey = 'AIzaSyBJMhMpJEZEN2fubae-mdIZ-vCEXOAkHMk'; // Replace with your actual Google Places API key
+    const apiKey = 'AIzaSyBJMhMpJEZEN2fubae-mdIZ-vCEXOAkHMk'; // Replace with your actual Google Places API key
     final url = Uri.https(
       'maps.googleapis.com',
       '/maps/api/place/nearbysearch/json',
@@ -222,7 +222,7 @@ class _MapScreenState extends State<MapScreen> {
   void _getDirectionsToPoliceStation(LatLng policeStation) async {
     if (_currentLocation == null) return;
 
-    final apiKey = 'AIzaSyBJMhMpJEZEN2fubae-mdIZ-vCEXOAkHMk'; // Replace with your actual API key
+    const apiKey = 'AIzaSyBJMhMpJEZEN2fubae-mdIZ-vCEXOAkHMk'; // Replace with your actual API key
     final url = Uri.https(
       'maps.googleapis.com',
       '/maps/api/directions/json',
@@ -247,7 +247,7 @@ class _MapScreenState extends State<MapScreen> {
           _polylines.clear();
           _polylines.add(
             Polyline(
-              polylineId: PolylineId('route_to_station'),
+              polylineId: const PolylineId('route_to_station'),
               points: polylineCoordinates,
               color: Colors.red,
               width: 5,
@@ -300,7 +300,7 @@ class _MapScreenState extends State<MapScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('${widget.keyword} Directions')),
       body: _currentLocation == null
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : GoogleMap(
               initialCameraPosition: CameraPosition(
                 target: _currentLocation!,
@@ -313,7 +313,7 @@ class _MapScreenState extends State<MapScreen> {
               polylines: _polylines,
               markers: _markers.union({
                 Marker(
-                  markerId: MarkerId('current_location'),
+                  markerId: const MarkerId('current_location'),
                   position: _currentLocation!,
                   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue), // Blue marker for current location
                 ),

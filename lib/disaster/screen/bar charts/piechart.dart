@@ -8,11 +8,11 @@ class CustomPieChart extends StatefulWidget {
   final List<String> labels;
 
   const CustomPieChart({
-    Key? key,
+    super.key,
     required this.values,
     required this.colors,
     required this.labels,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomPieChart> createState() => _CustomPieChartState();

@@ -6,6 +6,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LocationTrackingPage extends StatefulWidget {
+  const LocationTrackingPage({super.key});
+
   @override
   _LocationTrackingPageState createState() => _LocationTrackingPageState();
 }
@@ -60,7 +62,7 @@ class _LocationTrackingPageState extends State<LocationTrackingPage> {
 
   // Start location updates based on time interval (every 5 seconds)
   void _startLocationUpdates() {
-    _timer = Timer.periodic(Duration(seconds: 5), (timer) async {
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
@@ -113,14 +115,14 @@ class _LocationTrackingPageState extends State<LocationTrackingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Location Tracking")),
+      appBar: AppBar(title: const Text("Location Tracking")),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Toggle button to enable/disable tracking
             SwitchListTile(
-              title: Text('Share Location'),
+              title: const Text('Share Location'),
               value: _isTrackingEnabled,
               onChanged: (bool value) {
                 setState(() {
@@ -130,13 +132,13 @@ class _LocationTrackingPageState extends State<LocationTrackingPage> {
                     value); // Update tracking status in database
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // Display current tracking status
             Text(
               _isTrackingEnabled
                   ? "Location is being shared."
                   : "Location sharing is turned off.",
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
           ],
         ),

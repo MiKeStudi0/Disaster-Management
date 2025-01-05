@@ -10,6 +10,8 @@ import 'package:sensors_plus/sensors_plus.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class ShakeLocationPage extends StatefulWidget {
+  const ShakeLocationPage({super.key});
+
   @override
   _ShakeLocationPageState createState() => _ShakeLocationPageState();
 }
@@ -88,7 +90,7 @@ class _ShakeLocationPageState extends State<ShakeLocationPage> {
       print('access loc');
 
       // Fetch the current location
-      final LocationSettings locationSettings = LocationSettings(
+      const LocationSettings locationSettings = LocationSettings(
         accuracy: LocationAccuracy.high,
         timeLimit: Duration(seconds: 10),
       );
@@ -151,8 +153,8 @@ class _ShakeLocationPageState extends State<ShakeLocationPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Emergency SOS'),
-          content: Column(
+          title: const Text('Emergency SOS'),
+          content: const Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -174,7 +176,7 @@ class _ShakeLocationPageState extends State<ShakeLocationPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
