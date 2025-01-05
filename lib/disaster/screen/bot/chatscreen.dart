@@ -1,3 +1,4 @@
+import 'package:disaster_management/disaster/screen/rescue/const.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
@@ -12,15 +13,15 @@ class Chatscreen extends StatefulWidget {
   State<Chatscreen> createState() => _ChatscreenState();
 }
 
-class _ChatscreenState extends State<Chatscreen> {
+class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
   final TextEditingController userMessage = TextEditingController();
   final stt.SpeechToText _speech = stt.SpeechToText();
   bool _isListening = false;
   String _spokenText = '';
 
-  static const apiKey = 'AIzaSyCUpf8KF0f75DVrURx_pD5KbfxK8EKhmpg';
+  static const apiKey = map;
 
-  final model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: apiKey);
+  final model = GenerativeModel(model: 'gemini-2.0-flash-exp', apiKey: apiKey);
 
   final List<Message> _messages = [];
 
@@ -29,16 +30,14 @@ class _ChatscreenState extends State<Chatscreen> {
     userMessage.clear();
 
     setState(() {
-      _messages
-          .add(Message(isUser: true, date: DateTime.now(), message: message));
+      _messages.add(Message(isUser: true, date: DateTime.now(), message: message));
     });
 
     final content = [Content.text(message)];
     final response = await model.generateContent(content);
 
     setState(() {
-      _messages.add(Message(
-          isUser: false, date: DateTime.now(), message: response.text ?? ""));
+      _messages.add(Message(isUser: false, date: DateTime.now(), message: response.text ?? ""));
     });
   }
 
@@ -48,10 +47,12 @@ class _ChatscreenState extends State<Chatscreen> {
       if (available) {
         setState(() => _isListening = true);
         _speech.listen(onResult: (result) {
-          setState(() {
-            _spokenText = result.recognizedWords;
-            userMessage.text = _spokenText; // Set recognized text to input field
-          });
+          if (mounted) { // Ensure widget is still mounted before updating state
+            setState(() {
+              _spokenText = result.recognizedWords;
+              userMessage.text = _spokenText; // Set recognized text to input field
+            });
+          }
         });
       }
     } else {
@@ -78,14 +79,11 @@ class _ChatscreenState extends State<Chatscreen> {
           children: [
             Expanded(
               child: ListView.builder(
+                physics: BouncingScrollPhysics(), // Smooth scrolling
                 itemCount: _messages.length,
                 itemBuilder: (context, index) {
                   final message = _messages[index];
-                  return Messages(
-                    isUser: message.isUser,
-                    date: DateFormat('HH:mm').format(message.date),
-                    message: message.message,
-                  );
+                  return _buildMessageBubble(message);
                 },
               ),
             ),
@@ -114,8 +112,7 @@ class _ChatscreenState extends State<Chatscreen> {
                           border: InputBorder.none,
                           hintText: "Enter your query",
                           hintStyle: TextStyle(color: Colors.grey),
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 15.0),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
                         ),
                       ),
                     ),
@@ -151,48 +148,33 @@ class _ChatscreenState extends State<Chatscreen> {
                       onPressed: () {
                         sendMessage();
                       },
-                      icon: Icon(IconsaxPlusLinear.arrow_circle_right,
-                          color: Colors.white),
+                      icon: Icon(IconsaxPlusLinear.arrow_circle_right, color: Colors.white),
                     ),
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
     );
   }
-}
 
-class Messages extends StatelessWidget {
-  final bool isUser;
-  final String message;
-  final String date;
-
-  const Messages({
-    super.key,
-    required this.isUser,
-    required this.date,
-    required this.message,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
+  Widget _buildMessageBubble(Message message) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 300), // Smooth transition
       padding: const EdgeInsets.all(15),
       margin: const EdgeInsets.symmetric(vertical: 10).copyWith(
-        left: isUser ? 80 : 10,
-        right: isUser ? 10 : 80,
+        left: message.isUser ? 80 : 10,
+        right: message.isUser ? 10 : 80,
       ),
       decoration: BoxDecoration(
-        color: isUser ? Colors.blueAccent : Colors.white,
+        color: message.isUser ? Colors.blueAccent : Colors.white,
         borderRadius: BorderRadius.only(
           topLeft: const Radius.circular(15),
-          bottomLeft: isUser ? const Radius.circular(15) : Radius.zero,
+          bottomLeft: message.isUser ? const Radius.circular(15) : Radius.zero,
           topRight: const Radius.circular(15),
-          bottomRight: isUser ? Radius.zero : const Radius.circular(15),
+          bottomRight: message.isUser ? Radius.zero : const Radius.circular(15),
         ),
         boxShadow: [
           BoxShadow(
@@ -207,18 +189,18 @@ class Messages extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            message,
+            message.message,
             style: TextStyle(
-                color: isUser ? Colors.white : Colors.black87, fontSize: 16),
+                color: message.isUser ? Colors.white : Colors.black87, fontSize: 16),
           ),
           const SizedBox(height: 5),
           Text(
-            date,
+            DateFormat('HH:mm').format(message.date),
             style: TextStyle(
-              color: isUser ? Colors.white70 : Colors.black54,
+              color: message.isUser ? Colors.white70 : Colors.black54,
               fontSize: 12,
             ),
-          )
+          ),
         ],
       ),
     );
