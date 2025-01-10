@@ -1,8 +1,11 @@
+import 'dart:io'; // For File type
 import 'package:disaster_management/disaster/screen/login&signup/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart'; // Add image picker
+import 'package:firebase_storage/firebase_storage.dart'; // Add Firebase Storage
 import 'package:disaster_management/app/ui/geolocation.dart';
 
 class SignupPage extends StatefulWidget {
@@ -18,11 +21,23 @@ class _SignupPageState extends State<SignupPage> {
   final _passwordController = TextEditingController();
   final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
-  final _districtController =
-      TextEditingController(); // Added district controller
+  final _districtController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   bool _isPasswordVisible = false;
+  File? _profileImage; // Variable to store selected image
+
+  final ImagePicker _picker = ImagePicker(); // Instance of ImagePicker
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _profileImage = File(pickedFile.path);
+      });
+    }
+  }
 
   Future<void> _signUp() async {
     if (_formKey.currentState!.validate()) {
@@ -31,8 +46,8 @@ class _SignupPageState extends State<SignupPage> {
       });
 
       try {
-        UserCredential userCredential =
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
         );
@@ -96,13 +111,34 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Future<void> _saveUserData(User user) async {
-    // Get user data from controllers
     String uid = user.uid;
     String name = _nameController.text;
     String email = _emailController.text;
     String phone = _phoneController.text;
     String address = _addressController.text;
-    String district = _districtController.text; // Get district value
+    String district = _districtController.text;
+
+    String? profileImageUrl;
+
+    // If there's a profile image, upload it
+    if (_profileImage != null) {
+      try {
+        // Upload image to Firebase Storage
+        final storageRef = FirebaseStorage.instance.ref().child('profile_pictures/$uid');
+        UploadTask uploadTask = storageRef.putFile(_profileImage!);
+        await uploadTask;
+        profileImageUrl = await storageRef.getDownloadURL();
+      } catch (e) {
+        Get.snackbar(
+          'Error',
+          'Failed to upload profile picture: $e',
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return;
+      }
+    }
 
     // Upload user data to Firestore
     await FirebaseFirestore.instance.collection('users').doc(uid).set({
@@ -111,7 +147,8 @@ class _SignupPageState extends State<SignupPage> {
       'phone': phone,
       'address': address,
       'district': district,
-      'createdAt': Timestamp.now(), // Optionally, add a creation timestamp
+      'profileImageUrl': profileImageUrl ?? '', // Store image URL
+      'createdAt': Timestamp.now(),
     }).then((_) {
       Get.snackbar(
         'Success',
@@ -142,22 +179,18 @@ class _SignupPageState extends State<SignupPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              
-              const Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text(
-                  'Disaster Management',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 251, 251, 251)),
-                ),
-              ),
-              const SizedBox(
-                // Added SizedBox
-                height: 20,
-              ),
+              // const Padding(
+              //   padding: EdgeInsets.only(left: 10),
+              //   child: Text(
+              //     'Disaster Management',
+              //     style: TextStyle(
+              //         fontFamily: 'Poppins',
+              //         fontSize: 24,
+              //         fontWeight: FontWeight.bold,
+              //         color: Color.fromARGB(255, 251, 251, 251)),
+              //   ),
+              // ),
+              const SizedBox(height: 20),
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
@@ -168,15 +201,32 @@ class _SignupPageState extends State<SignupPage> {
                   child: Form(
                     key: _formKey,
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.stretch, // Align items to stretch
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const Text(
-                          'Create Account',
-                          style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromARGB(255, 118, 118, 118)),
+                      const Center(
+                          child:  Text(
+                            'Create Account',
+                            style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 118, 118, 118)),
+                          ),
+                        ),
+                                      const SizedBox(height: 20),
+
+                        // Profile Image Picker
+                        GestureDetector(
+                          onTap: _pickImage,
+                          child: CircleAvatar(
+                            radius: 40,
+                            backgroundColor: colorScheme.secondary,
+                            backgroundImage: _profileImage != null
+                                ? FileImage(_profileImage!)
+                                : null,
+                            child: _profileImage == null
+                                ? const Icon(Icons.add_a_photo, size: 30)
+                                : null,
+                          ),
                         ),
                         const SizedBox(height: 20),
                         _buildTextField(_nameController, 'Name', Icons.person),
@@ -190,10 +240,13 @@ class _SignupPageState extends State<SignupPage> {
                             _addressController, 'Address', Icons.location_on),
                         const SizedBox(height: 16),
                         _buildTextField(_districtController, 'District',
-                            Icons.location_city), // Added district field
+                            Icons.location_city),
                         const SizedBox(height: 16),
                         _buildPasswordField(),
                         const SizedBox(height: 20),
+
+                        const SizedBox(height: 20),
+
                         _isLoading
                             ? const Center(child: CircularProgressIndicator())
                             : SizedBox(

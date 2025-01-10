@@ -58,86 +58,91 @@ class _ShakeLocationPageState extends State<ShakeLocationPage> {
       }
     }
   }
+Future<void> _sendLocationToFirebase() async {
+  try {
+    // Check network connectivity
+    if (!await _isConnectedToNetwork()) {
+      print("No internet connection. Unable to send data.");
+      return;
+    }
 
-  Future<void> _sendLocationToFirebase() async {
-    try {
-      // Check network connectivity
-      if (!await _isConnectedToNetwork()) {
-        print("No internet connection. Unable to send data.");
-        return;
-      }
+    // Check location permissions
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      print("Location services are disabled.");
+      return;
+    }
 
-      // Check location permissions
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        print("Location services are disabled.");
-        return;
-      }
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
 
-      LocationPermission permission = await Geolocator.checkPermission();
-      print("Current permission status: $permission");
+    if (permission == LocationPermission.deniedForever) {
+      print("Location permissions are permanently denied.");
+      return;
+    }
 
-      if (permission == LocationPermission.denied) {
-        print("Requesting location permission...");
-        permission = await Geolocator.requestPermission();
-      }
-      print("Permission after request: $permission");
+    // Fetch the current location
+    Position? position = await Geolocator.getLastKnownPosition();
 
-      if (permission == LocationPermission.deniedForever) {
-        print("Location permissions are permanently denied.");
-        return;
-      }
-      print('access loc');
+    if (position == null) {
+      print("Failed to get location.");
+      return;
+    }
 
-      // Fetch the current location
-      const LocationSettings locationSettings = LocationSettings(
-        accuracy: LocationAccuracy.high,
-        timeLimit: Duration(seconds: 10),
-      );
+    // Get the current user UID from Firebase Authentication
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
+      print("User is not logged in.");
+      return;
+    }
 
-      Position? position = await Geolocator.getLastKnownPosition();
-      print('Location received: ${position?.latitude}, ${position?.longitude}');
+    String uid = currentUser.uid;
 
-      // Get the current user UID from Firebase Authentication
-      User? currentUser = FirebaseAuth.instance.currentUser;
-      if (currentUser == null) {
-        print("User is not logged in.");
-        return;
-      }
+    // Fetch the user's data from the Firestore 'users' collection
+    DocumentSnapshot userSnapshot =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
-      String uid = currentUser.uid;
-      print("User logged in with UID: $uid");
+    if (!userSnapshot.exists) {
+      print("User document not found.");
+      return;
+    }
 
-      // Fetch the user's name from the Firestore 'users' collection
-      DocumentSnapshot userSnapshot =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    // Extract user data
+    Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
 
-      if (!userSnapshot.exists) {
-        print("User document not found.");
-        return;
-      }
-      String userName = userSnapshot.get('name');
-      print("User's name: $userName");
+    String name = userData['name'] ?? 'Unknown';
+    String email = userData['email'] ?? 'Unknown';
+    String phone = userData['phone'] ?? 'Unknown';
+    String address = userData['address'] ?? 'Unknown';
+    String district = userData['district'] ?? 'Unknown';
+    String profileImageUrl = userData['profileImageUrl'] ?? 'Unknown';
 
-      // Send location to Firestore with the user's name instead of UID
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
-      await firestore.collection('Alert_locations').doc(uid).set({
-        'name': userName,
-        'latitude': position?.latitude,
-        'longitude': position?.longitude,
-        'timestamp': DateTime.now(),
-      });
+    // Send location and user details to Firestore
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    await firestore.collection('Alert_locations').doc(uid).set({
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'address': address,
+      'district': district,
+      'profileImageUrl': profileImageUrl,
+      'latitude': position.latitude,
+      'longitude': position.longitude,
+      'timestamp': DateTime.now(),
+    });
 
-      print(
-          'Location sent to Firebase with name $userName: ${position?.latitude}, ${position?.longitude}');
-    } catch (e) {
-      if (e is TimeoutException) {
-        print("Error: The location request timed out. Please try again.");
-      } else {
-        print('Error sending location to Firebase: $e');
-      }
+    print('Location and user details sent to Firebase successfully.');
+  } catch (e) {
+    if (e is TimeoutException) {
+      print("Error: The location request timed out. Please try again.");
+    } else {
+      print('Error sending location to Firebase: $e');
     }
   }
+}
+
 
   Future<bool> _isConnectedToNetwork() async {
     var connectivityResult = await Connectivity().checkConnectivity();

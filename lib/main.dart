@@ -94,7 +94,7 @@ void callbackDispatcher() {
 }
 
 void main() async {
-  await dotenv.load(fileName: ".env");
+  //await dotenv.load(fileName: ".env");
   final String timeZoneName;
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
