@@ -9,7 +9,7 @@ final ThemeData baseDark = ThemeData.dark(useMaterial3: true);
 const Color lightColor = Colors.white;
 const Color darkColor = Color.fromRGBO(30, 30, 30, 1);
 const Color oledColor = Colors.black;
-
+const Color divider =  Color.fromARGB(255, 95, 95, 95);
 ColorScheme colorSchemeLight = ColorScheme.fromSeed(
   seedColor: Colors.deepPurple,
   brightness: Brightness.light,

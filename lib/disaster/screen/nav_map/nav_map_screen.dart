@@ -2,6 +2,7 @@ import 'package:disaster_management/app/ui/settings/widgets/setting_card.dart';
 import 'package:disaster_management/disaster/screen/google_map/google_map.dart';
 import 'package:disaster_management/disaster/screen/volunteer/volunteer_list.dart';
 import 'package:disaster_management/disaster/screen/volunteer/volunteer_reg.dart';
+import 'package:disaster_management/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -25,14 +26,14 @@ class _NavMapScreenState extends State<NavMapScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildSectionTitle('Navigation Routes' .tr),
-              Divider(
-                color: Colors.grey[400],
+         const     Divider(
+                color: divider,
                 thickness: 1,
                 endIndent: 10,
               ),
               _buildRescueTeamList(),
-              Divider(
-                color: Colors.grey[400],
+          const    Divider(
+                color: divider,
                 thickness: 1,
                 endIndent: 10,
               ),
@@ -88,7 +89,7 @@ class _NavMapScreenState extends State<NavMapScreen> {
 
   Widget _buildRescueTeamList() {
     return SizedBox(
-      height: 350,
+      height: 420,
       child: ListView(
         scrollDirection: Axis.vertical,
         children: [
@@ -96,14 +97,14 @@ class _NavMapScreenState extends State<NavMapScreen> {
           _buildRescueTeamCard('Rescue Camp'.tr, 'Kozhikode', 'Ulliyeri'),
           const SizedBox(height: 10),
           _buildSectionTitle('Emergency Services'.tr),
-          Divider(
-            color: Colors.grey[400],
+        const  Divider(
+            color: divider,
             thickness: 1,
             endIndent: 10,
           ),
           _buildPoliceStationCard(), // Add police station block
           _buildHospitalCard(), // Add hospital block
-          //_fireforcecard(), // Add fire force block
+          _fireforcecard(), // Add fire force block
         ],
       ),
     );
@@ -210,7 +211,7 @@ class _NavMapScreenState extends State<NavMapScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const MapScreen(keyword: 'firestation'),
+            builder: (context) => const MapScreen(keyword: 'fire_station'),
           ),
         );
       },
