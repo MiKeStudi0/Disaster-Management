@@ -1223,7 +1223,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             SettingCard(
               icon: const Icon(IconsaxPlusLinear.archive_book),
-              text: 'Volunteer'.tr,
+              text: 'Volunteer Services'.tr,
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
@@ -1242,7 +1242,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 20, vertical: 15),
                                   child: Text(
-                                    'Volunteer'.tr,
+                                    'Volunteer Services'.tr,
                                     style:
                                         context.textTheme.titleLarge?.copyWith(
                                       fontSize: 20,
@@ -1253,7 +1253,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                   elevation: 4,
                                   icon: const Icon(
                                       LineAwesomeIcons.person_booth_solid),
-                                  text: 'Volunteer Registration',
+                                  text: 'Volunteer Registration'.tr,
                                   onPressed: () {
                                     Navigator.push(
                                         context,
@@ -1266,7 +1266,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                   elevation: 4,
                                   icon: const Icon(
                                       LineAwesomeIcons.people_carry_solid),
-                                  text: 'Volunteer List',
+                                  text: 'Volunteer List'.tr,
                                   onPressed: () {
                                     Navigator.push(
                                         context,

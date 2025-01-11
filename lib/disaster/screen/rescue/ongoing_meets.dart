@@ -4,6 +4,7 @@ import 'package:disaster_management/disaster/screen/rescue/vedioconf.dart';
 import 'package:disaster_management/disaster/screen/sos_screen/alert_shake.dart';
 import 'package:disaster_management/disaster/screen/static/static_awarness.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -20,18 +21,18 @@ class _OngoingScreenState extends State<OngoingScreen> {
 
   // List of helpline numbers
   final List<Map<String, String>> _helplineNumbers = [
-    {'department': 'Police', 'number': '100'},
-    {'department': 'Fire Department', 'number': '101'},
-    {'department': 'Ambulance', 'number': '102'},
-    {'department': 'Disaster Management Services', 'number': '108'},
-    {'department': 'National Emergency Number', 'number': '112'},
-    {'department': 'Women Helpline', 'number': '1091'},
-    {'department': 'Child Helpline', 'number': '1098'},
-    {'department': 'Senior Citizen Helpline', 'number': '14567'},
-    {'department': 'Tourist Helpline', 'number': '1363'},
-    {'department': 'Railway Helpline', 'number': '139'},
-    {'department': 'Mental Health Helpline', 'number': '9152987821'},
-    {'department': 'LPG Leak Helpline', 'number': '1906'},
+    {'department': 'Police'.tr, 'number': '100'},
+    {'department': 'Fire Department'.tr, 'number': '101'},
+    {'department': 'Ambulance'.tr, 'number': '102'},
+    {'department': 'Disaster Management Services'.tr, 'number': '108'},
+    {'department': 'National Emergency Number'.tr, 'number': '112'},
+    {'department': 'Women Helpline'.tr, 'number': '1091'},
+    {'department': 'Child Helpline'.tr, 'number': '1098'},
+    {'department': 'Senior Citizen Helpline'.tr, 'number': '14567'},
+    {'department': 'Tourist Helpline'.tr, 'number': '1363'},
+    {'department': 'Railway Helpline'.tr, 'number': '139'},
+    {'department': 'Mental Health Helpline'.tr, 'number': '9152987821'},
+    {'department': 'LPG Leak Helpline'.tr, 'number': '1906'},
   ];
 
   @override
@@ -44,14 +45,14 @@ class _OngoingScreenState extends State<OngoingScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSectionTitle('Rescue Teams Nearby'),
+              _buildSectionTitle('Rescue Teams Nearby'.tr),
               Divider(
                 color: Colors.grey[400],
                 thickness: 1,
                 endIndent: 10,
               ),
               _buildRescueTeamList(),
-              _buildSectionTitle('Helpline Numbers'),
+              _buildSectionTitle('Helpline Numbers'.tr),
               Divider(
                 color: Colors.grey[400],
                 thickness: 1,
@@ -63,31 +64,31 @@ class _OngoingScreenState extends State<OngoingScreen> {
                 thickness: 1,
                 endIndent: 10,
               ),
-              _buildSectionTitle('Important Information'),
+              _buildSectionTitle('Important Information'.tr),
               _buildStaticInformation(),
               const SizedBox(height: 24),
-              Center(
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MapScreen(),
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.map),
-                  label: const Text('Navigation Map'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.redAccent,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24.0, vertical: 12.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                  ),
-                ),
-              ),
+              // Center(
+              //   child: ElevatedButton.icon(
+              //     onPressed: () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //           builder: (context) => const MapScreen(),
+              //         ),
+              //       );
+              //     },
+              //     icon: const Icon(Icons.map),
+              //     label: const Text('Navigation Map'),
+              //     style: ElevatedButton.styleFrom(
+              //       foregroundColor: Colors.redAccent,
+              //       padding: const EdgeInsets.symmetric(
+              //           horizontal: 24.0, vertical: 12.0),
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(20.0),
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -108,28 +109,6 @@ class _OngoingScreenState extends State<OngoingScreen> {
     );
   }
 
-  Widget _buildHeader() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Available Rescue Teams',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 22.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 10),
-        Divider(
-          color: Colors.grey[400],
-          thickness: 1,
-          endIndent: 30,
-        ),
-      ],
-    );
-  }
-
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
@@ -147,9 +126,9 @@ class _OngoingScreenState extends State<OngoingScreen> {
       child: ListView(
         scrollDirection: Axis.vertical,
         children: [
-          _buildRescueTeamCard('Rescue Team S1', 'Kozhikode', 'Koyilandy'),
+          _buildRescueTeamCard('Rescue Team S1'.tr, 'Kozhikode', 'Koyilandy'),
           const SizedBox(height: 8),
-          _buildRescueTeamCard('Rescue Team S2', 'Kozhikode', 'Ulliyeri'),
+          _buildRescueTeamCard('Rescue Team S2'.tr, 'Kozhikode', 'Ulliyeri'),
           const SizedBox(height: 8),
         ],
       ),
@@ -175,7 +154,7 @@ class _OngoingScreenState extends State<OngoingScreen> {
             });
           },
           child: Text(
-            _isExpanded ? 'Show Less' : 'Show More',
+            _isExpanded ? 'Show Less'.tr : 'Show More'.tr,
             style: const TextStyle(color: Colors.redAccent),
           ),
         ),
@@ -216,7 +195,7 @@ class _OngoingScreenState extends State<OngoingScreen> {
     return SettingCard(
       elevation: 4,
       icon: const Icon(LineAwesomeIcons.book_dead_solid),
-      text: 'Awareness',
+      text: 'Awareness'.tr,
       onPressed: () {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const StaticdataScreen()));

@@ -3,6 +3,7 @@ import 'package:disaster_management/disaster/screen/google_map/google_map.dart';
 import 'package:disaster_management/disaster/screen/volunteer/volunteer_list.dart';
 import 'package:disaster_management/disaster/screen/volunteer/volunteer_reg.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class NavMapScreen extends StatefulWidget {
@@ -23,7 +24,7 @@ class _NavMapScreenState extends State<NavMapScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSectionTitle('Navigation Routes'),
+              _buildSectionTitle('Navigation Routes' .tr),
               Divider(
                 color: Colors.grey[400],
                 thickness: 1,
@@ -35,11 +36,11 @@ class _NavMapScreenState extends State<NavMapScreen> {
                 thickness: 1,
                 endIndent: 10,
               ),
-              _buildSectionTitle('Volunteer Services'),
+              _buildSectionTitle('Volunteer Services'.tr),
               SettingCard(
                 elevation: 4,
                 icon: const Icon(LineAwesomeIcons.person_booth_solid),
-                text: 'Volunteer Registration',
+                text: 'Volunteer Registration' .tr,
                 onPressed: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => const VolunteerReg()));
@@ -48,7 +49,7 @@ class _NavMapScreenState extends State<NavMapScreen> {
               SettingCard(
                 elevation: 4,
                 icon: const Icon(LineAwesomeIcons.people_carry_solid),
-                text: 'Volunteer List',
+                text: 'Volunteer List' .tr,
                 onPressed: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => VolunteerList()));
@@ -91,10 +92,10 @@ class _NavMapScreenState extends State<NavMapScreen> {
       child: ListView(
         scrollDirection: Axis.vertical,
         children: [
-          _buildRescueTeamCard('Safe Location', 'Kozhikode', 'Koyilandy'),
-          _buildRescueTeamCard('Rescue Camp ', 'Kozhikode', 'Ulliyeri'),
+          _buildRescueTeamCard('Safe Location'.tr, 'Kozhikode', 'Koyilandy'),
+          _buildRescueTeamCard('Rescue Camp'.tr, 'Kozhikode', 'Ulliyeri'),
           const SizedBox(height: 10),
-          _buildSectionTitle('Emergency Services'),
+          _buildSectionTitle('Emergency Services'.tr),
           Divider(
             color: Colors.grey[400],
             thickness: 1,
@@ -172,7 +173,7 @@ class _NavMapScreenState extends State<NavMapScreen> {
     return SettingCard(
       elevation: 4,
       icon: const Icon(LineAwesomeIcons.call_missed_outgoing),
-      text: 'Police Station',
+      text: 'Police Station'.tr,
       onPressed: () {
         Navigator.push(
           context,
@@ -188,7 +189,7 @@ class _NavMapScreenState extends State<NavMapScreen> {
     return SettingCard(
       elevation: 4,
       icon: const Icon(LineAwesomeIcons.plus_square),
-      text: 'Hospital',
+      text: 'Hospital'.tr,
       onPressed: () {
         Navigator.push(
           context,
