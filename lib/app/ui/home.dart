@@ -43,8 +43,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     getData();
-    setupTabController();
     locationAlertFunction();
+    setupTabController();
   }
 
   @override

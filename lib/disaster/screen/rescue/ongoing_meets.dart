@@ -1,5 +1,6 @@
 import 'package:disaster_management/app/ui/settings/widgets/setting_card.dart';
 import 'package:disaster_management/disaster/screen/google_map/google_map.dart';
+import 'package:disaster_management/disaster/screen/google_map/location_alert.dart';
 import 'package:disaster_management/disaster/screen/rescue/vedioconf.dart';
 import 'package:disaster_management/disaster/screen/sos_screen/alert_shake.dart';
 import 'package:disaster_management/disaster/screen/static/static_awarness.dart';
@@ -34,6 +35,12 @@ class _OngoingScreenState extends State<OngoingScreen> {
     {'department': 'Mental Health Helpline'.tr, 'number': '9152987821'},
     {'department': 'LPG Leak Helpline'.tr, 'number': '1906'},
   ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    locationAlertFunction();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,11 +148,8 @@ class _OngoingScreenState extends State<OngoingScreen> {
 
     return Column(
       children: [
-        ..._helplineNumbers
-            .take(displayCount)
-            .map((entry) =>
-                _buildHelplineCard(entry['department']!, entry['number']!))
-            ,
+        ..._helplineNumbers.take(displayCount).map((entry) =>
+            _buildHelplineCard(entry['department']!, entry['number']!)),
         const SizedBox(height: 8),
         TextButton(
           onPressed: () {
@@ -310,7 +314,8 @@ class _OngoingScreenState extends State<OngoingScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const VideoConferencePage(conferenceID: '12345'),
+          builder: (context) =>
+              const VideoConferencePage(conferenceID: '12345'),
         ),
       );
     } else {

@@ -146,10 +146,10 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 Future<void> _saveNotification(RemoteMessage message) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String>? notifications = prefs.getStringList('notifications') ?? [];
-  
+
   String notification =
       "${message.notification?.title ?? 'No Title'}::${message.notification?.body ?? 'No Body'}::${message.notification?.android?.imageUrl ?? ''}";
-  
+
   // Add image URL to the notification if available
 
   // Store both notification and image URL
@@ -157,8 +157,9 @@ Future<void> _saveNotification(RemoteMessage message) async {
 
   await prefs.setStringList('notifications', notifications);
 }
+
 void _showNotification(RemoteMessage message) {
-   AndroidNotificationDetails androidPlatformChannelSpecifics =
+  AndroidNotificationDetails androidPlatformChannelSpecifics =
       AndroidNotificationDetails(
     'Disaster Relief',
     'Alerts',
@@ -170,12 +171,11 @@ void _showNotification(RemoteMessage message) {
             FilePathAndroidBitmap(message.notification!.android!.imageUrl!),
             contentTitle: message.notification?.title,
             summaryText: message.notification?.body,
-             
           )
         : null,
   );
 
-   NotificationDetails platformChannelSpecifics = NotificationDetails(
+  NotificationDetails platformChannelSpecifics = NotificationDetails(
     android: androidPlatformChannelSpecifics,
   );
 

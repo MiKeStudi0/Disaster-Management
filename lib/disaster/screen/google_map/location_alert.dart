@@ -26,7 +26,7 @@ Future<void> locationAlertFunction() async {
 // Initialize local notifications
 Future<void> _initializeNotifications() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('app_icon');
+      AndroidInitializationSettings('@mipmap/ic_launcher'); // Default app icon
 
   const InitializationSettings initializationSettings =
       InitializationSettings(android: initializationSettingsAndroid);
@@ -38,18 +38,22 @@ Future<void> _initializeNotifications() async {
 Future<List<Map<String, dynamic>>> _fetchAlertPlacesFromFirestore() async {
   List<Map<String, dynamic>> alertPlaces = [];
 
-  // Fetch all documents from the 'Alertplace' collection
+  // Fetch all documents from the 'Danger_zones' collection
   QuerySnapshot snapshot =
       await FirebaseFirestore.instance.collection('Danger_zones').get();
 
   for (var doc in snapshot.docs) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-    // Assuming 'latitude', 'longitude', and 'radius' are fields in the collection
+    // Ensure latitude, longitude, and radius are valid doubles
+    double latitude = double.tryParse(data['latitude'].toString()) ?? 0.0;
+    double longitude = double.tryParse(data['longitude'].toString()) ?? 0.0;
+    double radius = double.tryParse(data['radius'].toString()) ?? 0.0;
+
     alertPlaces.add({
-      'latitude': data['latitude'],
-      'longitude': data['longitude'],
-      'radius': data['radius']
+      'latitude': latitude,
+      'longitude': longitude,
+      'radius': radius,
     });
   }
 
@@ -74,7 +78,8 @@ void _startLocationTracking(List<Map<String, dynamic>> alertPlaces) {
         place['latitude']!,
         place['longitude']!,
       );
-
+      print(position.latitude);
+      print(position.longitude);
       print("Distance from target: $distance meters");
 
       if (distance <= place['radius']!) {
@@ -102,7 +107,7 @@ void _startTimer() {
 
     print('User in area for $_timeSpentInArea seconds.');
 
-    // Trigger alert if the user has been in the area for 5 minutes (300 seconds)
+    // Trigger alert if the user has been in the area for 3 seconds (for testing)
     if (_timeSpentInArea >= 3) {
       _showNotification();
       _resetTimer();

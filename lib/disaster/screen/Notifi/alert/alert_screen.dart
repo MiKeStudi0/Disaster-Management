@@ -17,6 +17,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     _loadNotifications();
   }
 
+  // Load notifications from SharedPreferences
   Future<void> _loadNotifications() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? notifications = prefs.getStringList('notifications') ?? [];
@@ -27,16 +28,23 @@ class _NotificationsPageState extends State<NotificationsPage> {
     setState(() {
       _notifications = notifications.map((notification) {
         List<String> parts = notification.split('::');
+
+        // Debug: Check how the notification is split
+        print("Splitting notification: $parts");
+
         return {
           'title': parts.isNotEmpty ? parts[0] : 'No Title',
           'body': parts.length > 1 ? parts[1] : 'No Body',
-          'imageUrl': parts.length > 2 ? parts[2] : '', // Get image URL if available
+          'imageUrl':
+              parts.length > 2 ? parts[2] : '', // Get image URL if available
         };
       }).toList();
     });
   }
 
-  Future<void> _saveNotification(String title, String body, String imageUrl) async {
+  // Save a new notification to SharedPreferences
+  Future<void> _saveNotification(
+      String title, String body, String imageUrl) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? notifications = prefs.getStringList('notifications') ?? [];
 
@@ -45,6 +53,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
     notifications.add(notification);
 
     await prefs.setStringList('notifications', notifications);
+
+    // Debug: Check if notification was added
+    print("Notification saved: $notification");
   }
 
   @override
@@ -71,7 +82,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                           color: Colors.redAccent,
                           size: 30,
                         ),
-                        const SizedBox(width: 12), // Space between icon and content
+                        const SizedBox(
+                            width: 12), // Space between icon and content
 
                         // Notification content in Column
                         Expanded(
@@ -83,9 +95,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
+                                  overflow: TextOverflow
+                                      .ellipsis, // This will truncate text if it overflows
                                 ),
                               ),
                               const SizedBox(height: 8),
+                              // Display image if available
                               if (_notifications[index]['imageUrl']!.isNotEmpty)
                                 Image.network(
                                   _notifications[index]['imageUrl']!,
