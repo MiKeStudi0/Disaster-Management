@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'dart:typed_data';
 
 // Initialize notification plugin
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -116,21 +117,25 @@ void _startTimer() {
 }
 
 // Function to show notification
+
 Future<void> _showNotification() async {
-  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+  final AndroidNotificationDetails androidPlatformChannelSpecifics =
       AndroidNotificationDetails(
-    'channel_id',
-    'channel_name',
-    importance: Importance.max,
-    priority: Priority.high,
-    showWhen: false,
+    'channel_id', // Unique channel ID
+    'channel_name', // Channel name for user settings
+    importance: Importance.max, // High priority
+    priority: Priority.high, // High priority for heads-up notifications
+    vibrationPattern: Int64List.fromList([0, 500, 1000, 500]), // Vibration pattern
+    enableVibration: true, // Enable vibration
   );
-  const NotificationDetails platformChannelSpecifics =
+
+  final NotificationDetails platformChannelSpecifics =
       NotificationDetails(android: androidPlatformChannelSpecifics);
+
   await flutterLocalNotificationsPlugin.show(
-    0,
-    'Location Alert',
-    'You have stayed in this area for 5 minutes.',
+    0, // Notification ID
+    'Location Alert', // Notification title
+    'You have stayed in this area for 5 minutes.', // Notification body
     platformChannelSpecifics,
   );
 }

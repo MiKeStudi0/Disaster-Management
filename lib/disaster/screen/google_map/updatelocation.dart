@@ -135,10 +135,8 @@ void _setMapStyle() async {
     setState(() {
       _currentPosition = LatLng(position.latitude, position.longitude);
     });
-    if (_mapController != null) {
-      _mapController.animateCamera(CameraUpdate.newLatLng(_currentPosition));
+    _mapController.animateCamera(CameraUpdate.newLatLng(_currentPosition));
     }
-  }
 @override
 Widget build(BuildContext context) {
   final colorScheme = Theme.of(context).colorScheme;
