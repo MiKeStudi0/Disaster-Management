@@ -202,8 +202,11 @@ void _setMapStyle() async {
           : Stack(
               children: [
                 GoogleMap(
+                      myLocationEnabled: true,
+            myLocationButtonEnabled: true,
                   initialCameraPosition: CameraPosition(
                     target: _currentLocation!,
+                    
                     zoom: 10.0,
                   ),
                   onMapCreated: (GoogleMapController controller) {
@@ -211,7 +214,7 @@ void _setMapStyle() async {
                     _moveCameraToCurrentLocation();
                     _setMapStyle();
                   },
-                  compassEnabled: true,
+                  //compassEnabled: true,
                   polylines: _polylines,
                   markers: _markers.union({
                     Marker(

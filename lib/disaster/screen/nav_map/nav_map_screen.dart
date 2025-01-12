@@ -1,5 +1,6 @@
 import 'package:disaster_management/app/ui/settings/widgets/setting_card.dart';
 import 'package:disaster_management/disaster/screen/google_map/google_map.dart';
+import 'package:disaster_management/disaster/screen/google_map/rescuemap.dart';
 import 'package:disaster_management/disaster/screen/google_map/updatelocation.dart';
 import 'package:disaster_management/disaster/screen/volunteer/volunteer_list.dart';
 import 'package:disaster_management/disaster/screen/volunteer/volunteer_reg.dart';
@@ -153,7 +154,7 @@ class _NavMapScreenState extends State<NavMapScreen> {
       child: ListView(
         scrollDirection: Axis.vertical,
         children: [
-          _buildRescueTeamCard('Safe Location'.tr, 'Kozhikode', 'Koyilandy'),
+          _builSafeLocationCard('Safe Location'.tr, 'Kozhikode', 'Koyilandy'),
           _buildRescueTeamCard('Rescue Camp'.tr, 'Kozhikode', 'Ulliyeri'),
           const SizedBox(height: 10),
           _buildSectionTitle('Emergency Services'.tr),
@@ -177,6 +178,35 @@ class _NavMapScreenState extends State<NavMapScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => const MapScreen( keyword: 'school'),
+          ),
+        );
+      },
+      child: Card(
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildTeamInfo(teamName, location, area),
+              const Icon(Icons.arrow_forward_ios, color: Colors.redAccent),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  
+  Widget _builSafeLocationCard(String teamName, String location, String area) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const RescueMap(),
           ),
         );
       },
