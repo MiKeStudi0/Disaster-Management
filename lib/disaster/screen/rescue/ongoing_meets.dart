@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:disaster_management/app/ui/settings/widgets/setting_card.dart';
+import 'package:disaster_management/disaster/screen/bar%20charts/Charts.dart';
 import 'package:disaster_management/disaster/screen/google_map/google_map.dart';
 import 'package:disaster_management/disaster/screen/rescue/vedioconf.dart';
 import 'package:disaster_management/disaster/screen/sos_screen/alert_shake.dart';
@@ -66,7 +69,7 @@ class _OngoingScreenState extends State<OngoingScreen> {
               ),
               _buildSectionTitle('Important Information'.tr),
               _buildStaticInformation(),
-              const SizedBox(height: 24),
+              _buildResourceInformation(),
               // Center(
               //   child: ElevatedButton.icon(
               //     onPressed: () {
@@ -137,7 +140,7 @@ class _OngoingScreenState extends State<OngoingScreen> {
 
   Widget _buildHelplineNumbers() {
     // Determine how many items to display
-    int displayCount = _isExpanded ? _helplineNumbers.length : 3;
+    int displayCount = _isExpanded ? _helplineNumbers.length : 2;
 
     return Column(
       children: [
@@ -202,7 +205,17 @@ class _OngoingScreenState extends State<OngoingScreen> {
       },
     );
   }
-
+ Widget _buildResourceInformation() {
+    return SettingCard(
+      elevation: 4,
+      icon: const Icon(LineAwesomeIcons.book_dead_solid),
+      text: 'Donations'.tr,
+      onPressed: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) =>  Charts()));
+      },
+    );
+  }
   Widget _buildRescueTeamCard(String teamName, String location, String area) {
     return GestureDetector(
       onTap: () {
