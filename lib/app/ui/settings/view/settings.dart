@@ -1291,7 +1291,7 @@ class _SettingsPageState extends State<SettingsPage> {
               text: 'version'.tr,
               onPressed: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => const Charts()));
+                    context, MaterialPageRoute(builder: (context) =>  Charts()));
               },
               info: true,
               infoWidget: _TextInfo(
