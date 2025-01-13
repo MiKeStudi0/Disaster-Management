@@ -105,6 +105,35 @@ class _ChartsState extends State<Charts> {
       },
     );
   }
+Widget _buildLegendItem(String label, Color color, int value) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      Row(
+        children: [
+          Container(
+            width: 12,
+            height: 12,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+            ),
+          ),
+          SizedBox(width: 8),
+          Text(
+            label,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+      SizedBox(height: 4),
+      Text(
+        '$value units',
+        style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+      ),
+    ],
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -160,9 +189,14 @@ class _ChartsState extends State<Charts> {
                     colorScheme: colorScheme,
                   ),
                   SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _submitData,
-                    child: Text('Update Donation Data'),
+                  SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    
+                    child: ElevatedButton(
+                      onPressed: _submitData,
+                      child: Text('Update Donation Data'),
+                    ),
                   ),
                 ],
               ),
@@ -209,48 +243,86 @@ class _ChartsState extends State<Charts> {
                           ((total - available - required) / total * 100)
                               .toStringAsFixed(1);
 
-                      return Card(
-                        margin: EdgeInsets.symmetric(vertical: 8),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Donation Unit: ${data['name']}',
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(height: 10),
-                              SizedBox(
-                                height: 200,
-                                child: PieChart(
-                                  PieChartData(
-                                    sections: [
-                                      PieChartSectionData(
-                                        value: available.toDouble(),
-                                        color: Colors.green,
-                                        title: 'Available\n$availablePercentage%',
-                                      ),
-                                      PieChartSectionData(
-                                        value: required.toDouble(),
-                                        color: Colors.orange,
-                                        title: 'Required\n$requiredPercentage%',
-                                      ),
-                                      PieChartSectionData(
-                                        value: (total - available - required)
-                                            .toDouble(),
-                                        color: Colors.blue,
-                                        title: 'Remaining\n$remainingPercentage%',
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                    return Card(
+  margin: EdgeInsets.symmetric(vertical: 8),
+  child: Padding(
+    padding: const EdgeInsets.all(16.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Donation Unit: ${data['name']}',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 10),
+        Text(
+          'This pie chart shows the breakdown of available, required, and remaining resources for the donation unit.',
+          style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+        ),
+        SizedBox(height: 10),
+        SizedBox(
+          height: 200,
+          child: PieChart(
+            PieChartData(
+              sections: [
+                PieChartSectionData(
+                  value: available.toDouble(),
+                  color: Colors.green,
+                  title: '${availablePercentage}%',
+                  radius: 50,
+                  titleStyle: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                PieChartSectionData(
+                  value: required.toDouble(),
+                  color: Colors.orange,
+                  title: '${requiredPercentage}%',
+                  radius: 50,
+                  titleStyle: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                PieChartSectionData(
+                  value: (total - available - required).toDouble(),
+                  color: Colors.blue,
+                  title: '${remainingPercentage}%',
+                  radius: 50,
+                  titleStyle: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 10),
+        // Legend with Values
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildLegendItem('Available', Colors.green, available),
+            _buildLegendItem('Required', Colors.orange, required),
+            _buildLegendItem('Remaining', Colors.blue, total - available - required),
+          ],
+        ),
+        SizedBox(height: 10),
+        Text(
+          'Note: The values below each legend indicate the quantity in units.',
+          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+        ),
+      ],
+    ),
+  ),
+);
+
+
                     },
                   );
                 },
