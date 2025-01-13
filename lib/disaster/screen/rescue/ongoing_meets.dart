@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disaster_management/app/ui/settings/widgets/setting_card.dart';
 import 'package:disaster_management/disaster/screen/bar%20charts/Charts.dart';
 import 'package:disaster_management/disaster/screen/google_map/google_map.dart';
@@ -77,28 +78,6 @@ class _OngoingScreenState extends State<OngoingScreen> {
               _buildSectionTitle('Important Information'.tr),
               _buildStaticInformation(),
               _buildResourceInformation(),
-              // Center(
-              //   child: ElevatedButton.icon(
-              //     onPressed: () {
-              //       Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //           builder: (context) => const MapScreen(),
-              //         ),
-              //       );
-              //     },
-              //     icon: const Icon(Icons.map),
-              //     label: const Text('Navigation Map'),
-              //     style: ElevatedButton.styleFrom(
-              //       foregroundColor: Colors.redAccent,
-              //       padding: const EdgeInsets.symmetric(
-              //           horizontal: 24.0, vertical: 12.0),
-              //       shape: RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.circular(20.0),
-              //       ),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -130,20 +109,7 @@ class _OngoingScreenState extends State<OngoingScreen> {
     );
   }
 
-  Widget _buildRescueTeamList() {
-    return SizedBox(
-      height: 200,
-      child: ListView(
-        scrollDirection: Axis.vertical,
-        children: [
-          _buildRescueTeamCard('Rescue Team S1'.tr, 'Kozhikode', 'Koyilandy'),
-          const SizedBox(height: 8),
-          _buildRescueTeamCard('Rescue Team S2'.tr, 'Kozhikode', 'Ulliyeri'),
-          const SizedBox(height: 8),
-        ],
-      ),
-    );
-  }
+ 
 
   Widget _buildHelplineNumbers() {
     // Determine how many items to display
@@ -220,62 +186,93 @@ class _OngoingScreenState extends State<OngoingScreen> {
       },
     );
   }
-  Widget _buildRescueTeamCard(String teamName, String location, String area) {
-    return GestureDetector(
-      onTap: () {
-        _showCodeInputDialog(context, index);
-        setState(() {
-          index += 1;
-        });
-      },
-      child: Card(
-        elevation: 5.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(12.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildTeamInfo(teamName, location, area),
-              const Icon(Icons.arrow_forward_ios, color: Colors.redAccent),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
-  Widget _buildTeamInfo(String teamName, String location, String area) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          teamName,
-          style: const TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Row(
+// Fetch data dynamically from Firebase Firestore
+Widget _buildRescueTeamList() {
+  return StreamBuilder<QuerySnapshot>(
+    stream: FirebaseFirestore.instance.collection('rescue_teams').snapshots(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+        return const Center(child: Text('No rescue teams available.'));
+      }
+
+      // Extract documents from snapshot
+      final rescueTeams = snapshot.data!.docs;
+
+      return ListView.builder(
+        shrinkWrap: true,
+        itemCount: rescueTeams.length,
+        itemBuilder: (context, index) {
+          final team = rescueTeams[index].data() as Map<String, dynamic>;
+
+          // Ensure attributes are available
+          final teamName = team['name'] ?? 'Unknown Team';
+          final location = team['location'] ?? 'Unknown Location';
+          final area = team['area'] ?? 'Unknown Area';
+
+          return _buildRescueTeamCard(teamName, location, area);
+        },
+      );
+    },
+  );
+}
+
+Widget _buildRescueTeamCard(String teamName, String location, String area) {
+  return GestureDetector(
+    onTap: () {
+      _showCodeInputDialog(context, index);
+      setState(() {
+        index += 1;
+      });
+    },
+    child: Card(
+      elevation: 5.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Icon(Icons.location_on, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text(location,
-                style: const TextStyle(fontSize: 14.0, color: Colors.white)),
-            const SizedBox(width: 8),
-            const Icon(Icons.track_changes_outlined, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text(area,
-                style: const TextStyle(fontSize: 14.0, color: Colors.white)),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  teamName,
+                  style: const TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    const Icon(Icons.location_on, color: Colors.grey),
+                    const SizedBox(width: 4),
+                    Text(location,
+                        style: const TextStyle(fontSize: 14.0, color: Colors.white)),
+                    const SizedBox(width: 8),
+                    const Icon(Icons.track_changes_outlined, color: Colors.grey),
+                    const SizedBox(width: 4),
+                    Text(area,
+                        style: const TextStyle(fontSize: 14.0, color: Colors.white)),
+                  ],
+                ),
+              ],
+            ),
+            const Icon(Icons.arrow_forward_ios, color: Colors.redAccent),
           ],
         ),
-      ],
-    );
-  }
+      ),
+    ),
+  );
+}
+
 
   Future<void> _makePhoneCall(String number) async {
     final Uri phoneUri = Uri(scheme: 'tel', path: number);
