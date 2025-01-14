@@ -9,11 +9,8 @@ environment:
   sdk: ">=3.5.2 <4.0.0"
 
 dependencies:
-<<<<<<< HEAD
   cached_network_image: ^3.4.1
-=======
   audioplayers: ^6.1.0
->>>>>>> 83c160f2c69eb4ccf62b48a2f652d24bf8944c1a
   cloud_firestore: ^5.4.2
   connectivity_plus: ^6.0.5
   device_info_plus: ^10.1.2
