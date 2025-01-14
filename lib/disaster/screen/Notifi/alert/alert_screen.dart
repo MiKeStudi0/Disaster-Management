@@ -1,134 +1,89 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class NotificationsPage extends StatefulWidget {
+class NotificationsPage extends StatelessWidget {
   const NotificationsPage({super.key});
 
-  @override
-  _NotificationsPageState createState() => _NotificationsPageState();
-}
-
-class _NotificationsPageState extends State<NotificationsPage> {
-  List<Map<String, String>> _notifications = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadNotifications();
-  }
-
-  // Load notifications from SharedPreferences
-  Future<void> _loadNotifications() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? notifications = prefs.getStringList('notifications') ?? [];
-
-    // Debug: Check what notifications are retrieved
-    print("Retrieved notifications: $notifications");
-
-    setState(() {
-      _notifications = notifications.map((notification) {
-        List<String> parts = notification.split('::');
-
-        // Debug: Check how the notification is split
-        print("Splitting notification: $parts");
-
-        return {
-          'title': parts.isNotEmpty ? parts[0] : 'No Title',
-          'body': parts.length > 1 ? parts[1] : 'No Body',
-          'imageUrl':
-              parts.length > 2 ? parts[2] : '', // Get image URL if available
-        };
-      }).toList();
-    });
-  }
-
-  // Save a new notification to SharedPreferences
-  Future<void> _saveNotification(
-      String title, String body, String imageUrl) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? notifications = prefs.getStringList('notifications') ?? [];
-
-    // Format: title::body::imageUrl
-    String notification = '$title::$body::$imageUrl';
-    notifications.add(notification);
-
-    await prefs.setStringList('notifications', notifications);
-
-    // Debug: Check if notification was added
-    print("Notification saved: $notification");
+  Future<void> deleteNotification(String id) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('notifications')
+          .doc(id)
+          .delete();
+      print('Notification deleted');
+    } catch (e) {
+      print('Error deleting notification: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications'),
+        title: const Text('Emergency Alerts'),
       ),
-      body: _notifications.isEmpty
-          ? const Center(child: Text('No Notifications Available'))
-          : ListView.builder(
-              itemCount: _notifications.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  margin: const EdgeInsets.all(8.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('notifications')
+            .orderBy('timestamp', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(child: Text('No notifications available.'));
+          }
+
+          final notifications = snapshot.data!.docs;
+
+          return ListView.builder(
+            itemCount: notifications.length,
+            itemBuilder: (context, index) {
+              final notification = notifications[index];
+              return Card(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  child: ListTile(
+                    leading: const Icon(Icons.notifications),
+                    title: Text(notification['title'] ?? 'No Title'),
+                    subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Leading bell icon
-                        const Icon(
-                          Icons.notifications,
-                          color: Colors.redAccent,
-                          size: 30,
-                        ),
-                        const SizedBox(
-                            width: 12), // Space between icon and content
-
-                        // Notification content in Column
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _notifications[index]['title'] ?? 'No Title',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  overflow: TextOverflow
-                                      .ellipsis, // This will truncate text if it overflows
-                                ),
+                        Text(notification['body'] ?? 'No Body'),
+                        const SizedBox(height: 8),
+                        if (notification['imageUrl'] != null &&
+                            notification['imageUrl'].isNotEmpty)
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: CachedNetworkImage(
+                              imageUrl: notification['imageUrl'],
+                              placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator(),
                               ),
-                              const SizedBox(height: 8),
-                              // Display image if available
-                              if (_notifications[index]['imageUrl']!.isNotEmpty)
-                                Image.network(
-                                  _notifications[index]['imageUrl']!,
-                                  height: 150, // Adjust height as needed
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(Icons.broken_image,
-                                        color: Colors.grey); // Fallback icon
-                                  },
-                                ),
-                              const SizedBox(height: 8),
-                              Text(
-                                _notifications[index]['body'] ?? 'No Body',
-                                style: TextStyle(
-                                  color: Colors.grey[700],
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: 150, // Adjust as needed
+                            ),
                           ),
-                        ),
+                        const SizedBox(height: 3),
                       ],
                     ),
-                  ),
-                );
-              },
-            ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        deleteNotification(notification.id);
+                      },
+                    ),
+                  ));
+            },
+          );
+        },
+      ),
     );
   }
 }
