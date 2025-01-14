@@ -165,9 +165,10 @@ class _GroupChatPageState extends State<GroupChatPage> {
                       child: Align(
                         alignment: isSentByCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
                         child: Container(
+                          width: MediaQuery.of(context).size.width * 0.7,
                           padding: const EdgeInsets.all(12.0),
                           decoration: BoxDecoration(
-                            color: isSentByCurrentUser ? Colors.teal.shade100 : Colors.grey.shade200,
+                            color: isSentByCurrentUser ? const Color.fromARGB(255, 70, 70, 70) : Colors.grey.shade200,
                             borderRadius: BorderRadius.circular(20.0),
                             boxShadow: [
                               BoxShadow(
@@ -188,11 +189,14 @@ class _GroupChatPageState extends State<GroupChatPage> {
                                 children: [
                                   CircleAvatar(
                                     radius: 20,
-                                    backgroundColor: Colors.grey[300],
+                                    
+                                    backgroundColor: const Color.fromARGB(255, 70, 44, 69),
                                     child: Text(userName[0].toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold)),
                                   ),
                                   SizedBox(width: 8),
-                                  Text(userName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                                  Text(userName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14,
+                                   color: Colors.white
+                                  )),
                                 ],
                               ),
                               fileWidget,
@@ -200,7 +204,7 @@ class _GroupChatPageState extends State<GroupChatPage> {
                               Text(
                                 data['text'] ?? 'No text',
                                 style: TextStyle(
-                                  color: isSentByCurrentUser ? Colors.black : Colors.black87,
+                                  color: isSentByCurrentUser ? const Color.fromARGB(255, 255, 255, 255) : const Color.fromARGB(221, 233, 233, 233),
                                   fontSize: 14,
                                 ),
                               ),
@@ -215,7 +219,7 @@ class _GroupChatPageState extends State<GroupChatPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.only(bottom: 50.0),
             child: Row(
               children: [
                 IconButton(
@@ -237,7 +241,7 @@ class _GroupChatPageState extends State<GroupChatPage> {
                         borderSide: BorderSide.none,
                       ),
                       filled: true,
-                      fillColor: Colors.grey[200],
+                      fillColor: const Color.fromARGB(255, 77, 77, 77),
                     ),
                   ),
                 ),
