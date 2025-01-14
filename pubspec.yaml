@@ -9,6 +9,7 @@ environment:
   sdk: ">=3.5.2 <4.0.0"
 
 dependencies:
+  audioplayers: ^6.1.0
   cloud_firestore: ^5.4.2
   connectivity_plus: ^6.0.5
   device_info_plus: ^10.1.2
@@ -79,6 +80,7 @@ dependencies:
   timezone: ^0.9.4
   url_launcher: ^6.3.0
   vibration: ^2.0.0
+  video_player: ^2.9.2
   workmanager: ^0.5.2
   zego_uikit_prebuilt_video_conference: ^2.9.8
 

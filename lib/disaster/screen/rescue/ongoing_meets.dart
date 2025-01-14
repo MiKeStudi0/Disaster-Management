@@ -1,9 +1,7 @@
-import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disaster_management/app/ui/settings/widgets/setting_card.dart';
 import 'package:disaster_management/disaster/screen/bar%20charts/Charts.dart';
-import 'package:disaster_management/disaster/screen/google_map/google_map.dart';
 import 'package:disaster_management/disaster/screen/google_map/location_alert.dart';
 import 'package:disaster_management/disaster/screen/rescue/vedioconf.dart';
 import 'package:disaster_management/disaster/screen/sos_screen/alert_shake.dart';
@@ -12,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:disaster_management/disaster/screen/groupchat/groupchat.dart';
 class OngoingScreen extends StatefulWidget {
   const OngoingScreen({super.key});
 
@@ -78,6 +76,7 @@ class _OngoingScreenState extends State<OngoingScreen> {
               _buildSectionTitle('Important Information'.tr),
               _buildStaticInformation(),
               _buildResourceInformation(),
+              _buildChat(),
             ],
           ),
         ),
@@ -186,6 +185,18 @@ class _OngoingScreenState extends State<OngoingScreen> {
       },
     );
   }
+   Widget _buildChat() {
+    return SettingCard(
+      elevation: 4,
+      icon: const Icon(LineAwesomeIcons.book_dead_solid),
+      text: 'Status Updates'.tr,
+      onPressed: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) =>  GroupChatPage()));
+      },
+    );
+  }
+
 
 // Fetch data dynamically from Firebase Firestore
 Widget _buildRescueTeamList() {
