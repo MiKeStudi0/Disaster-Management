@@ -6,6 +6,7 @@ import 'package:disaster_management/disaster/screen/google_map/location_alert.da
 import 'package:disaster_management/disaster/screen/rescue/vedioconf.dart';
 import 'package:disaster_management/disaster/screen/sos_screen/alert_shake.dart';
 import 'package:disaster_management/disaster/screen/static/static_awarness.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -21,7 +22,8 @@ class OngoingScreen extends StatefulWidget {
 class _OngoingScreenState extends State<OngoingScreen> {
   int index = 0;
   bool _isExpanded = false;
-
+  String? userAddress;
+  String? userId;
   // List of helpline numbers
   final List<Map<String, String>> _helplineNumbers = [
     {'department': 'Police'.tr, 'number': '100'},
@@ -42,7 +44,19 @@ class _OngoingScreenState extends State<OngoingScreen> {
     // TODO: implement initState
     super.initState();
     locationAlertFunction();
+        _getUserAddress();
+
   }
+
+ Future<String?> _getUserAddress() async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) return null;
+  final userDoc = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(user.uid)
+      .get();
+  return userDoc.data()?['address'];
+}
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +74,7 @@ class _OngoingScreenState extends State<OngoingScreen> {
                 thickness: 1,
                 endIndent: 10,
               ),
-              _buildRescueTeamList(),
+              _buildRescueTeamSection(),
               _buildSectionTitle('Helpline Numbers'.tr),
               Divider(
                 color: Colors.grey[400],
@@ -196,30 +210,58 @@ class _OngoingScreenState extends State<OngoingScreen> {
       },
     );
   }
+Widget _buildRescueTeamSection() {
+  return FutureBuilder<String?>(
+    future: _getUserAddress(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      if (!snapshot.hasData || snapshot.data == null) {
+        return const Center(child: Text('Unable to fetch your address.'));
+      }
+      final userAddress = snapshot.data;
+      return _buildRescueTeamList(userAddress);
+    },
+  );
+}
+Widget _buildRescueTeamList(String? userAddress) {
+  if (userAddress == null || userAddress.isEmpty) {
+    return const Center(
+      child: Text(
+        'Unable to determine your address. Please update your profile.',
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
 
-
-// Fetch data dynamically from Firebase Firestore
-Widget _buildRescueTeamList() {
   return StreamBuilder<QuerySnapshot>(
-    stream: FirebaseFirestore.instance.collection('rescue_teams').snapshots(),
+    stream: FirebaseFirestore.instance
+        .collection('rescue_teams')
+        .where('area', isEqualTo: userAddress) // Filter by user's address
+        .snapshots(),
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
         return const Center(child: CircularProgressIndicator());
       }
       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-        return const Center(child: Text('No rescue teams available.'));
+        return const Center(
+          child: Text(
+            'No rescue teams found in your area.',
+            style: TextStyle(color: Colors.white),
+          ),
+        );
       }
 
-      // Extract documents from snapshot
       final rescueTeams = snapshot.data!.docs;
 
       return ListView.builder(
-        shrinkWrap: true,
+        shrinkWrap: true, // Ensures it fits inside the scrollable column
+        physics: const NeverScrollableScrollPhysics(), // Avoid nested scroll issues
         itemCount: rescueTeams.length,
         itemBuilder: (context, index) {
           final team = rescueTeams[index].data() as Map<String, dynamic>;
 
-          // Ensure attributes are available
           final teamName = team['name'] ?? 'Unknown Team';
           final location = team['location'] ?? 'Unknown Location';
           final area = team['area'] ?? 'Unknown Area';
