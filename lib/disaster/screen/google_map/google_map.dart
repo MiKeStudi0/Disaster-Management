@@ -28,10 +28,12 @@ class _MapScreenState extends State<MapScreen> {
     _determinePosition();
     _initializeCompass();
   }
-void _setMapStyle() async {
-  String style = await DefaultAssetBundle.of(context).loadString('assets/map_style.json');
-  _mapController.setMapStyle(style);
-}
+
+  void _setMapStyle() async {
+    String style = await DefaultAssetBundle.of(context)
+        .loadString('assets/map_style.json');
+    _mapController.setMapStyle(style);
+  }
 
   void _initializeCompass() {
     FlutterCompass.events!.listen((event) {
@@ -78,7 +80,8 @@ void _setMapStyle() async {
       'maps.googleapis.com',
       '/maps/api/place/nearbysearch/json',
       {
-        'location': '${_currentLocation!.latitude},${_currentLocation!.longitude}',
+        'location':
+            '${_currentLocation!.latitude},${_currentLocation!.longitude}',
         'radius': '10000', // 10 km radius
         'type': widget.keyword,
         'key': apiKey,
@@ -109,7 +112,8 @@ void _setMapStyle() async {
             markerId: MarkerId(name),
             position: LatLng(lat, lng),
             infoWindow: InfoWindow(title: name),
-            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+            icon:
+                BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
             onTap: () {
               _getDirectionsToPlace(LatLng(lat, lng));
             },
@@ -123,23 +127,42 @@ void _setMapStyle() async {
     if (_currentLocation == null) return;
 
     const apiKey = map; // Replace with your actual API key
-    final url = Uri.https(
-      'maps.googleapis.com',
-      '/maps/api/directions/json',
-      {
-        'origin': '${_currentLocation!.latitude},${_currentLocation!.longitude}',
-        'destination': '${destination.latitude},${destination.longitude}',
-        'key': apiKey,
-        'mode': 'driving',
-      },
-    );
+    final url =
+        Uri.parse("https://routes.googleapis.com/directions/v2:computeRoutes");
 
-    final response = await http.get(url);
+    final headers = {
+      "Content-Type": "application/json",
+      "X-Goog-Api-Key": apiKey,
+      "X-Goog-FieldMask":
+          "routes.polyline.encodedPolyline" // Fetch only required fields
+    };
+
+    final body = jsonEncode({
+      "origin": {
+        "location": {
+          "latLng": {
+            "latitude": _currentLocation!.latitude,
+            "longitude": _currentLocation!.longitude
+          }
+        }
+      },
+      "destination": {
+        "location": {
+          "latLng": {
+            "latitude": destination.latitude,
+            "longitude": destination.longitude
+          }
+        }
+      },
+      "travelMode": "DRIVE",
+    });
+
+    final response = await http.post(url, headers: headers, body: body);
+
     if (response.statusCode == 200) {
       final decodedData = json.decode(response.body);
-      final routes = decodedData['routes'] as List;
-      if (routes.isNotEmpty) {
-        final points = routes[0]['overview_polyline']['points'];
+      if (decodedData['routes'].isNotEmpty) {
+        final points = decodedData['routes'][0]['polyline']['encodedPolyline'];
         List<LatLng> polylineCoordinates = _decodePolyline(points);
         setState(() {
           _polylines.clear();
@@ -202,11 +225,10 @@ void _setMapStyle() async {
           : Stack(
               children: [
                 GoogleMap(
-                      myLocationEnabled: true,
-            myLocationButtonEnabled: true,
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: true,
                   initialCameraPosition: CameraPosition(
                     target: _currentLocation!,
-                    
                     zoom: 10.0,
                   ),
                   onMapCreated: (GoogleMapController controller) {
@@ -220,7 +242,8 @@ void _setMapStyle() async {
                     Marker(
                       markerId: const MarkerId('current_location'),
                       position: _currentLocation!,
-                      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+                      icon: BitmapDescriptor.defaultMarkerWithHue(
+                          BitmapDescriptor.hueBlue),
                       rotation: _heading,
                     ),
                   }),
@@ -235,7 +258,8 @@ void _setMapStyle() async {
                           CameraPosition(
                             target: _currentLocation!,
                             zoom: 10.0,
-                            bearing: _heading, // Update bearing to face the user’s direction
+                            bearing:
+                                _heading, // Update bearing to face the user’s direction
                           ),
                         ),
                       );

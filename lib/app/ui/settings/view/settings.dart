@@ -1291,7 +1291,7 @@ class _SettingsPageState extends State<SettingsPage> {
               text: 'version'.tr,
               onPressed: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) =>  Charts()));
+                    context, MaterialPageRoute(builder: (context) => Charts()));
               },
               info: true,
               infoWidget: _TextInfo(
@@ -1305,7 +1305,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const NotificationsPage(),
+                      builder: (context) => NotificationsPage(),
                     ));
               },
             ),
@@ -1315,7 +1315,8 @@ class _SettingsPageState extends State<SettingsPage> {
               onPressed: () async {
                 await FirebaseAuth.instance.signOut();
                 // Navigate back to the Signup page after logging out
-                Get.off(() => const SignupPage(), transition: Transition.rightToLeft);
+                Get.off(() => const SignupPage(),
+                    transition: Transition.rightToLeft);
               },
             ),
             Padding(

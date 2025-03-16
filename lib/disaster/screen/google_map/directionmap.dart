@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:http/http.dart' as http;
+import 'package:disaster_management/disaster/screen/rescue/const.dart';
 
 class MapDirectionPage extends StatefulWidget {
   final LatLng destination;
@@ -26,17 +27,16 @@ class _MapDirectionPageState extends State<MapDirectionPage> {
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation(); // Fetch initial location
-    _startLocationUpdates(); // Start continuous updates
+    _getCurrentLocation();
+    _startLocationUpdates();
   }
 
   @override
   void dispose() {
-    _tts.stop(); // Stop TTS
+    _tts.stop();
     super.dispose();
   }
 
-  /// Fetches the current location of the user.
   Future<void> _getCurrentLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
@@ -44,84 +44,147 @@ class _MapDirectionPageState extends State<MapDirectionPage> {
       setState(() {
         _currentPosition = LatLng(position.latitude, position.longitude);
       });
-      _fetchDirections(); // Fetch the route once the location is determined
+      _fetchDirections(); // Fetch route after getting the location
     } catch (e) {
       print('Error fetching current location: $e');
     }
   }
 
-  /// Continuously updates the user's location in real-time.
   void _startLocationUpdates() {
     Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
-        distanceFilter: 10, // Minimum distance to trigger update
+        distanceFilter: 10, // Update every 10 meters
       ),
     ).listen((Position position) {
       setState(() {
         _currentPosition = LatLng(position.latitude, position.longitude);
       });
 
-      // Center map to current location
       _mapController.animateCamera(CameraUpdate.newLatLng(_currentPosition));
       _checkRouteDeviation();
     });
   }
 
-  /// Fetches the route directions and displays the polyline.
+  /// Fetches the route using Google Routes API
   Future<void> _fetchDirections() async {
-    try {
-      String apiKey =
-          "AIzaSyBJMhMpJEZEN2fubae-mdIZ-vCEXOAkHMk"; // Replace with your API Key
-      String url =
-          "https://maps.googleapis.com/maps/api/directions/json?origin=${_currentPosition.latitude},${_currentPosition.longitude}&destination=${widget.destination.latitude},${widget.destination.longitude}&mode=driving&key=$apiKey";
+    const String apiKey = map;
+    const String url =
+        "https://routes.googleapis.com/directions/v2:computeRoutes";
 
-      final response = await http.get(Uri.parse(url));
-      final data = json.decode(response.body);
+    final headers = {
+      'Content-Type': 'application/json',
+      'X-Goog-Api-Key': apiKey,
+      'X-Goog-FieldMask':
+          'routes.polyline.encodedPolyline,routes.legs.steps.navigationInstruction'
+    };
 
-      if (data['routes'].isNotEmpty) {
-        List steps = data['routes'][0]['legs'][0]['steps'];
-        setState(() {
-          _polylineCoordinates = [];
-          for (var step in steps) {
-            PolylinePoints polylinePoints = PolylinePoints();
-            List<PointLatLng> result =
-                polylinePoints.decodePolyline(step['polyline']['points']);
-            for (var point in result) {
-              _polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-            }
+    final body = jsonEncode({
+      "origin": {
+        "location": {
+          "latLng": {
+            "latitude": _currentPosition.latitude,
+            "longitude": _currentPosition.longitude
           }
+        }
+      },
+      "destination": {
+        "location": {
+          "latLng": {
+            "latitude": widget.destination.latitude,
+            "longitude": widget.destination.longitude
+          }
+        }
+      },
+      "travelMode": "DRIVE",
+      "routingPreference": "TRAFFIC_AWARE"
+    });
 
-          _polylines = {
-            Polyline(
-              polylineId: const PolylineId("route"),
-              points: _polylineCoordinates,
-              color: Colors.blue,
-              width: 5,
-            ),
-          };
-        });
+    try {
+      final response =
+          await http.post(Uri.parse(url), headers: headers, body: body);
+      print("API Response: ${response.body}");
 
-        _updateNextInstruction(steps); // Speak the first instruction
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data["routes"] != null && data["routes"].isNotEmpty) {
+          String encodedPolyline =
+              data["routes"][0]["polyline"]["encodedPolyline"];
+          _polylineCoordinates = _decodePolyline(encodedPolyline);
+          _updatePolylines();
+
+          List steps = data["routes"][0]["legs"][0]["steps"];
+          _updateNextInstruction(steps);
+          setState(() {});
+        } else {
+          print("No routes found.");
+        }
       } else {
-        print("No route found.");
+        print("Error fetching route: ${response.statusCode}");
+        print("Response body: ${response.body}");
       }
     } catch (e) {
       print("Error fetching directions: $e");
     }
   }
 
-  /// Updates the next navigation instruction.
+  List<LatLng> _decodePolyline(String encoded) {
+    List<LatLng> points = [];
+    int index = 0, len = encoded.length;
+    int lat = 0, lng = 0;
+
+    while (index < len) {
+      int shift = 0, result = 0;
+      int byte;
+
+      do {
+        byte = encoded.codeUnitAt(index++) - 63;
+        result |= (byte & 0x1F) << shift;
+        shift += 5;
+      } while (byte >= 0x20);
+
+      int deltaLat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+      lat += deltaLat;
+
+      shift = 0;
+      result = 0;
+      do {
+        byte = encoded.codeUnitAt(index++) - 63;
+        result |= (byte & 0x1F) << shift;
+        shift += 5;
+      } while (byte >= 0x20);
+
+      int deltaLng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+      lng += deltaLng;
+
+      points.add(LatLng(lat / 1E5, lng / 1E5));
+    }
+    return points;
+  }
+
+  void _updatePolylines() {
+    setState(() {
+      _polylines.clear();
+      _polylines.add(
+        Polyline(
+          polylineId: PolylineId("route"),
+          points: _polylineCoordinates,
+          color: Colors.blue,
+          width: 5,
+        ),
+      );
+    });
+  }
+
   void _updateNextInstruction(List steps) {
     if (steps.isNotEmpty) {
       setState(() {
-        _nextInstruction = steps[0]['html_instructions'];
+        _nextInstruction = steps[0]['navigationInstruction']['instruction'];
       });
-      _tts.speak(_nextInstruction!); // Speak the instruction
+      _tts.speak(_nextInstruction!);
     }
   }
 
-  /// Checks if the user has deviated from the route.
   void _checkRouteDeviation() {
     const double deviationThreshold = 50.0; // Threshold in meters
     bool isOffRoute = _polylineCoordinates.every((LatLng point) {
@@ -135,7 +198,8 @@ class _MapDirectionPageState extends State<MapDirectionPage> {
     });
 
     if (isOffRoute) {
-      _fetchDirections(); // Fetch new route if off-route
+      print("Off route! Recalculating...");
+      _fetchDirections();
     }
   }
 
@@ -147,7 +211,7 @@ class _MapDirectionPageState extends State<MapDirectionPage> {
         children: [
           GoogleMap(
             initialCameraPosition:
-                const CameraPosition(target: LatLng(0, 0), zoom: 13),
+                CameraPosition(target: _currentPosition, zoom: 13),
             onMapCreated: (controller) => _mapController = controller,
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
@@ -162,11 +226,14 @@ class _MapDirectionPageState extends State<MapDirectionPage> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
-                boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 10)],
+                boxShadow: const [
+                  BoxShadow(color: Colors.black26, blurRadius: 10)
+                ],
               ),
               child: Text(
                 _nextInstruction ?? "Fetching directions...",
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
             ),
